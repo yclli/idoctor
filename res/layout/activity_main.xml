@@ -1,0 +1,184 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context="com.bowen.spinner.MainActivity" >
+
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_weight="3"
+		android:layout_margin="0dip"
+		android:background="@drawable/left_bg"
+		android:orientation="vertical"
+		>
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="180dip"
+			android:layout_marginTop="20dip"
+			android:layout_marginLeft="40dip"
+			android:layout_marginRight="40dip"
+			android:paddingLeft="20dip"
+			android:paddingRight="20dip"
+			android:background="#CFCFCF"
+			android:textSize="40dip"
+			android:textColor="#000000"
+			android:gravity="center"
+			android:text="黄浦区老年公寓"
+			android:id="@+id/gero_title"
+			/>
+		<Button
+			android:layout_width="match_parent"
+			android:layout_height="180dip"
+			android:layout_gravity="center"
+	        android:textSize="34dip"
+	        android:textColor="#FFFFFF"
+			android:text="@string/room_string"
+			android:id="@+id/room_btn"
+			android:onClick="roomBtnClicked"
+			android:background="@android:color/transparent"
+			/>
+		<Button
+			android:layout_width="match_parent"
+			android:layout_height="180dip"
+			android:layout_gravity="center"
+	        android:textSize="34dip"
+	        android:textColor="#000000"
+	        android:onClick="elderBtnClicked"
+			android:text="@string/elder_string"
+			android:id="@+id/elder_btn"
+			android:background="@android:color/transparent"
+			/>
+		<Button
+			android:layout_width="match_parent"
+			android:layout_height="180dip"
+			android:layout_gravity="center"
+	        android:textSize="34dip"
+	        android:textColor="#000000"
+	        android:onClick="itemBtnClicked"
+			android:text="@string/item_string"
+			android:id="@+id/item_btn"
+			android:background="@android:color/transparent"
+			/>
+		
+	</LinearLayout>
+	
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_weight="1"
+		android:id="@+id/right_ll"
+		android:orientation="vertical"
+		android:background="@drawable/right_bg"
+		>
+		
+<!-- 		<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/room_gv"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:numColumns="auto_fit"
+			android:verticalSpacing="10dp"
+			android:horizontalSpacing="10dp"
+			android:columnWidth="200dp"
+			android:stretchMode="columnWidth"
+			android:gravity="center" 
+			/> -->
+	
+<!-- 	    <TextView
+	    	android:gravity="center"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/select_room" />
+	
+		<Spinner
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/roomSpinner">
+			</Spinner>
+			
+		<TextView
+	    	android:gravity="center"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/select_elder" />
+	
+		<Spinner
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/elderSpinner">
+			</Spinner>
+			
+		<TextView
+	    	android:gravity="center"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/select_item" />
+	        
+		<Spinner
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/itemSpinner"/>
+			
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="300px"
+			android:text="@string/empty_str"/>
+		<Button
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/confirm_str"
+			android:id="@+id/confirm_btn"
+			android:onClick="beginMeasure"/> -->
+	</LinearLayout>
+
+<!-- 
+    <TextView
+    	android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/select_room" />
+
+	<Spinner
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/roomSpinner">
+		</Spinner>
+		
+	<TextView
+    	android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/select_elder" />
+
+	<Spinner
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/elderSpinner">
+		</Spinner>
+		
+	<TextView
+    	android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/select_item" />
+        
+	<Spinner
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/itemSpinner"/>
+		
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="300px"
+		android:text="@string/empty_str"/>
+	<Button
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/confirm_str"
+		android:id="@+id/confirm_btn"
+		android:onClick="beginMeasure"/> -->
+		
+		
+</LinearLayout>

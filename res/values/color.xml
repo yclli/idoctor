@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFFFF</color>
+    <color name="commonWhite9">#99FFFFFF</color>
+    <color name="roomDivider">#AAB5A642</color>
+    
+    <color name="text">#1E1E1E</color>
+    <color name="tab_selected_text">#FFFFFF</color>
+    <color name="tab_selected_icon">#08D7FF</color>
+    <color name="tab_text">#999999</color>
+    <color name="tab_icon">#FAFAFA</color>
+    <color name="tab_text_shadow">#245066</color>
+</resources>

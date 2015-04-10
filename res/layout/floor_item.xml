@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="100dip"
+    android:layout_height="50dip" >
+    <Button
+    	android:id="@+id/floorItemBtn"  
+    	android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:textColor="#000000"
+    	android:textSize="30dip"
+    	android:background="@color/commonWhite9"
+    	android:onClick="floorButtonClick"
+    	android:layout_centerHorizontal="true" />
+</RelativeLayout>

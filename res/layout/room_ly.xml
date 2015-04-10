@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/room_ly"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="30dip"
+    android:paddingRight="30dip"
+    android:orientation="vertical" >
+    <LinearLayout 
+		android:id="@+id/building_divider"
+		android:layout_width="match_parent"
+		android:layout_height="60dip"
+		android:layout_marginTop="10dip"
+		android:layout_marginBottom="10dip"
+		android:paddingLeft="30dip"
+		android:paddingRight="30dip"
+		android:background="@color/roomDivider"
+		android:orientation="horizontal"
+        >
+        <TextView 
+			android:layout_width="200dip"
+			android:layout_height="match_parent"
+			android:textColor="#666666"
+			android:textSize="40dip"
+			android:text="@string/select_building"
+		/>
+		<TextView 
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_marginLeft="300dip"
+			android:textColor="#666666"
+			android:textSize="40dip"
+			android:text="@string/select_str"
+		/>
+		<TextView
+			android:id="@+id/building_text"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_marginLeft="10dip"
+			android:layout_marginRight="10dip"
+			android:textColor="#000000"
+			android:textSize="40dip"
+		/>
+    </LinearLayout>
+    
+    <GridView android:id="@+id/building_gv"
+        android:layout_width="match_parent" 
+		android:layout_height="wrap_content"
+		android:numColumns="auto_fit"
+		android:verticalSpacing="10dp"
+		android:horizontalSpacing="10dp"
+		android:layout_marginBottom="15dp"
+		android:columnWidth="200dp"
+		android:stretchMode="columnWidth"
+		android:gravity="center">
+        >
+    </GridView>
+
+    <LinearLayout
+        android:id="@+id/floor_divider"
+	    android:layout_width="match_parent"
+	    android:layout_height="60dip"
+	    android:layout_marginTop="10dip"
+	    android:layout_marginBottom="10dip"
+	    android:paddingLeft="30dip"
+	    android:paddingRight="30dip"
+	    android:background="@color/roomDivider"
+	    android:orientation="horizontal"
+        >
+		<TextView 
+			android:layout_width="200dip"
+			android:layout_height="match_parent"
+			android:textColor="#666666"
+			android:textSize="40dip"
+			android:text="@string/select_floor"
+			/>
+	      <TextView 
+	          android:layout_width="wrap_content"
+	          android:layout_height="wrap_content"
+	          android:layout_marginLeft="300dip"
+	          android:textColor="#666666"
+	          android:textSize="40dip"
+	          android:text="@string/select_str"
+	          />
+		<TextView
+		    android:id="@+id/floor_text"
+	        android:layout_width="wrap_content"
+	        android:layout_height="match_parent"
+			android:layout_marginLeft="10dip"
+			android:layout_marginRight="10dip"
+			android:textColor="#000000"
+			android:textSize="40dip"
+		    />
+    </LinearLayout>
+    <GridView android:id="@+id/floor_gv"
+        android:layout_width="match_parent" 
+		android:layout_height="wrap_content"
+		android:numColumns="auto_fit"
+		android:verticalSpacing="10dp"
+		android:horizontalSpacing="10dp"
+		android:layout_marginBottom="15dp"
+		android:columnWidth="120dp"
+		android:stretchMode="columnWidth"
+		android:gravity="center">
+        >
+    </GridView>
+
+    <GridView android:id="@+id/room_gv"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:numColumns="auto_fit"
+		android:verticalSpacing="10dp"
+		android:horizontalSpacing="10dp"
+		android:layout_marginTop="15dp"
+		android:columnWidth="200dp"
+		android:stretchMode="columnWidth"
+		android:gravity="center">
+        
+    </GridView>
+    
+     
+
+</LinearLayout>

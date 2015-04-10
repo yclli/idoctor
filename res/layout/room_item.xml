@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dip"
+    android:layout_height="140dip" >
+    
+    <Button
+    	android:id="@+id/roomItemBtn"  
+    	android:layout_width="match_parent"
+    	android:layout_height="130dip"
+    	android:textColor="#FFFFFF"
+    	android:textSize="40dip"
+    	android:background="@drawable/room_bg"
+    	android:onClick="roomButtonClick"
+    	android:layout_centerHorizontal="true" />
+
+</RelativeLayout>
