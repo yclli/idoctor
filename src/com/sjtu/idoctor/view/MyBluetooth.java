@@ -17,6 +17,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,6 +31,9 @@ import android.widget.Toast;
 
 
 public class MyBluetooth extends Activity{
+	
+	SharedPreferences preferences;
+	SharedPreferences.Editor editor;
 	private String elderName = null;
 	private String roomNo = null;
 	private String elderID = null;
@@ -62,10 +66,8 @@ public class MyBluetooth extends Activity{
 				try{
 					Log.d("idoc","handle msg 5");
 				}
-				catch(Exception e){}
-				
+				catch(Exception e){}	
 			}
-
 		}
 	};
 	
@@ -75,11 +77,11 @@ public class MyBluetooth extends Activity{
 		super.onCreate(savedInstanceState);
 		mContext = this;
 		
-		Intent intent =getIntent();
-		elderName = intent.getStringExtra("elderName");
-		elderID = intent.getStringExtra("elderID");
-		roomNo = intent.getStringExtra("roomNo");
-		itemName = intent.getStringExtra("itemName");
+		preferences = getSharedPreferences("Doctor", Activity.MODE_PRIVATE);
+		elderName = preferences.getString("elderName", "");
+		elderID = preferences.getString("elderId", "");
+		roomNo = preferences.getString("roomNo", "");
+		itemName = preferences.getString("itemName", "");
 
 		final LinearLayout layout_body = new LinearLayout(this);
 		layout_body.setOrientation(LinearLayout.VERTICAL);

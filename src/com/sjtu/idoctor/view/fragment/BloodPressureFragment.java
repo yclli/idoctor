@@ -17,8 +17,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,6 +37,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class BloodPressureFragment extends FragmentActivity{
+	
+	SharedPreferences preferences;
+	SharedPreferences.Editor editor;
 	public static final String bp7Address = "8C:DE:52:08:D7:1A";
 	private BluetoothDevice mBTDevice = null;
 	private BluetoothAdapter mBTAdapter = null;
@@ -131,12 +134,13 @@ public class BloodPressureFragment extends FragmentActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bp_activity_main);
 		this.mBTAdapter = BluetoothAdapter.getDefaultAdapter();
-		Intent intent =getIntent();
-		elderName = intent.getStringExtra("com.sjtu.idoctor.elderName");
-		elderID = intent.getStringExtra("com.sjtu.idoctor.elderID");
-		Log.d("idoc",elderID);
-		roomNo = intent.getStringExtra("com.sjtu.idoctor.roomNo");
-		itemName = intent.getStringExtra("com.sjtu.idoctor.itemName");
+		
+		preferences = getSharedPreferences("Doctor", Activity.MODE_PRIVATE);
+		elderName = preferences.getString("elderName", "");
+		elderID = preferences.getString("elderId", "");
+		roomNo = preferences.getString("roomNo", "");
+		itemName = preferences.getString("itemName", "");
+		doctorID = preferences.getString("doctorId", "8");
 		
 		processTimer = 0;
 		

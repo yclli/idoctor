@@ -168,17 +168,12 @@ public class MainActivity extends ActionBarActivity {
 					HashMap<String, Object> map = new HashMap<String, Object>();  
 					map.put("elder_name", elderInfoList.get(i).get("elderName"));
 					map.put("elder_id", elderInfoList.get(i).get("elderId"));
-					//String elderName = elderInfoList.get(i).get("elderName");
-					//Log.d("idoc-elderName",elderName);
 					elderNameList.add(map);
 				}
 				
 				_elderGVAdapter = new SimpleAdapter(MainActivity.this,elderNameList,R.layout.elder_item,new String[] {"elder_name"}, new int[] {R.id.elder_btn});
 
 				MainActivity.this.elder_gv.setAdapter(_elderGVAdapter);
-				//_elder = (String[]) elderNameList.toArray(new String[elderNameList.size()]);
-				//_elderAdapter = new ArrayAdapter<String>(MainActivity.this,android.R.layout.simple_spinner_item,_elder);
-				//elderSpinner.setAdapter(_elderAdapter);
 			}else if(msg.what ==4){
 				Toast.makeText(MainActivity.this, "网络链接失败", 50000).show();
 			}
@@ -222,7 +217,7 @@ public class MainActivity extends ActionBarActivity {
 		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectAll().penaltyLog().build());
 		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
 		
-		preferences = getSharedPreferences("Doctor",Activity.MODE_PRIVATE);
+		preferences = getSharedPreferences("Doctor", Activity.MODE_PRIVATE);
 		
 		dbu = new DBUtils(preferences);
 		roomEntity = dbu.getAllRoom();
@@ -255,38 +250,6 @@ public class MainActivity extends ActionBarActivity {
 		}else{
 			toggleThirdPage();
 		}
-		
-		//room_gv = (GridView) findViewById(R.id.room_gv);
-/*		roomSpinner = (Spinner) findViewById(R.id.roomSpinner);
-		roomSpinner.setPrompt("选择楼层");
-		
-		Log.d("idoc","setRoom");
-		confirmBtn =(Button) findViewById(R.id.confirm_btn);
-
-		
-		elderSpinner = (Spinner) findViewById(R.id.elderSpinner);
-		elderSpinner.setPrompt("");
-		
-		Log.d("idoc","set elder");
-		itemSpinner = (Spinner) findViewById(R.id.itemSpinner);
-		itemSpinner.setPrompt("");
-		_itemAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,_items);
-		itemSpinner.setAdapter(_itemAdapter);
-		Log.d("idoc","set item end");
-		roomSpinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener(){
-			@Override
-			public void onItemSelected(AdapterView<?> parent,View v,int position,long id){
-				Message msg = new Message();
-				msg.what=10;
-				mHandler.sendMessage(msg);
-			}
-			
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0){
-				
-			}
-		});*/
-		
 	}
 	
 	
@@ -445,30 +408,31 @@ public class MainActivity extends ActionBarActivity {
 			elderID = elderInfoList.get(indexOfelder).get("elderId");
 		}
 		
-		Intent in = null;
+		Intent measureIntent = null;
 		
 		if(itemName.equals("测量体温")){
-			in = new Intent(this,TempratureMeasureActivity.class);
+			measureIntent = new Intent(this,TempratureMeasureActivity.class);
 		}else if(itemName.equals("测量血压")){
-			in=new Intent(this,BloodPressureFragment.class);
+			measureIntent = new Intent(this,BloodPressureFragment.class);
 		}else if(itemName.equals("测量心电图")){
-			in=new Intent(this,ConfirmActivity.class);
+			measureIntent = new Intent(this,ConfirmActivity.class);
 			//Toast.makeText(this,"新功能正在开发中，敬请期待",3000).show();
 			//return;
 		}
-		if(in==null){
+		if(measureIntent == null){
 			Log.i("idoc","in is null");
 		}else if(elderNameMessage == null){
 			Log.i("idoc","elderNameMessage is null");
 		}else if(elderName == null){
 			Log.i("idoc","elderName is null");
 		}
-		in.putExtra(elderNameMessage,elderName);
-		in.putExtra(itemMessage, itemName);
-		Log.d("idoc","intentExtra"+elderID);
-		in.putExtra(elderIDMessage, elderID);
-		in.putExtra(roomNoMessage, roomNo);
-		startActivity(in);
+		editor = preferences.edit();
+		editor.putString("elderName", elderName);
+		editor.putString("itemName", itemName);
+		editor.putString("elderId", elderID);
+		editor.putString("roomNo", roomNo);
+		editor.commit();
+		startActivity(measureIntent);
 	}
 	
 	public void genRoomItemList(){

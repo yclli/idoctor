@@ -8,7 +8,6 @@ import kankan.wheel.widget.WheelView;
 import kankan.wheel.widget.adapters.NumericWheelAdapter;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +26,9 @@ import com.sjtu.idoctor.model.TempratureCacheBean;
 import com.sjtu.idoctor.utils.DBUtil;
 
 public class TempratureMeasureActivity extends Activity{
+	
+	SharedPreferences preferences;
+	SharedPreferences.Editor editor;
 	private boolean timeChanged = false;
 	private Context mContext = null;
 	public String elderID = "";
@@ -55,14 +57,13 @@ public class TempratureMeasureActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_temprature);
-
-		Intent intent =getIntent();
-		elderName = intent.getStringExtra("com.sjtu.idoctor.elderName");
-		elderID = intent.getStringExtra("com.sjtu.idoctor.elderID");
-		Log.d("idoc",elderID);
-		roomNo = intent.getStringExtra("com.sjtu.idoctor.roomNo");
-		itemName = intent.getStringExtra("com.sjtu.idoctor.itemName");
 		
+		preferences = getSharedPreferences("Doctor", Activity.MODE_PRIVATE);
+		elderName = preferences.getString("elderName", "");
+		elderID = preferences.getString("elderId", "");
+		roomNo = preferences.getString("roomNo", "");
+		itemName = preferences.getString("itemName", "");
+		doctorID = preferences.getString("doctorId", "8");
 
 		TextView roomNameTv = (TextView) findViewById(R.id.current_room);
 		TextView elderNameTv = (TextView) findViewById(R.id.current_elder);

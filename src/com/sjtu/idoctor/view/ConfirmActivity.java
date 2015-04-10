@@ -17,6 +17,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,6 +31,9 @@ import android.widget.Toast;
 
 
 public class ConfirmActivity extends Activity{
+	
+	SharedPreferences preferences;
+	SharedPreferences.Editor editor;
 	public static String elderName = "";
 	public static String roomNo = "";
 	public static String elderID = "";
@@ -51,12 +55,11 @@ public class ConfirmActivity extends Activity{
 		registerReceiver(bluetoothReceiver, filter); 
 		// Don't forget to unregister during onDestroy
 
-		Intent intent =getIntent();
-		elderName = intent.getStringExtra("com.sjtu.idoctor.elderName");
-		elderID = intent.getStringExtra("com.sjtu.idoctor.elderID");
-		Log.d("idoc",elderID);
-		roomNo = intent.getStringExtra("com.sjtu.idoctor.roomNo");
-		itemName = intent.getStringExtra("com.sjtu.idoctor.itemName");
+		preferences = getSharedPreferences("Doctor", Activity.MODE_PRIVATE);
+		elderName = preferences.getString("elderName", "");
+		elderID = preferences.getString("elderId", "");
+		roomNo = preferences.getString("roomNo", "");
+		itemName = preferences.getString("itemName", "");
 		
 		TextView roomNameTv = (TextView) findViewById(R.id.current_room);
 		TextView elderNameTv = (TextView) findViewById(R.id.current_elder);
