@@ -1143,6 +1143,7 @@ containing a value of this type.
         public static final int current_room=0x7f050046;
         public static final int default_activity_button=0x7f050028;
         public static final int dialog=0x7f05000e;
+        public static final int diastolicPressure=0x7f05005d;
         public static final int disableHome=0x7f050008;
         public static final int doctor=0x7f05003d;
         public static final int doctxt=0x7f05003c;
@@ -1158,7 +1159,7 @@ containing a value of this type.
         public static final int floor_gv=0x7f050077;
         public static final int floor_text=0x7f050076;
         public static final int gero_title=0x7f050041;
-        public static final int heartrate=0x7f05005f;
+        public static final int heartRate=0x7f05005f;
         public static final int home=0x7f050014;
         public static final int homeAsUp=0x7f050005;
         public static final int hour=0x7f050052;
@@ -1169,7 +1170,6 @@ containing a value of this type.
         public static final int item_gv=0x7f05006a;
         public static final int listMode=0x7f050001;
         public static final int list_item=0x7f050029;
-        public static final int lowerbp=0x7f05005e;
         public static final int measure_btn=0x7f050065;
         public static final int measure_confirm_btn=0x7f05004d;
         public static final int middle=0x7f050012;
@@ -1211,6 +1211,7 @@ containing a value of this type.
         public static final int start_btn=0x7f05005c;
         public static final int submit=0x7f050060;
         public static final int submit_area=0x7f050039;
+        public static final int systolicPressure=0x7f05005e;
         public static final int t_cancel_button=0x7f050059;
         public static final int t_submit_button=0x7f050058;
         public static final int tabMode=0x7f050002;
@@ -1223,7 +1224,6 @@ containing a value of this type.
         public static final int top_action_bar=0x7f050020;
         public static final int tv_loading=0x7f05006c;
         public static final int up=0x7f050021;
-        public static final int upperbp=0x7f05005d;
         public static final int useLogo=0x7f050003;
         public static final int web=0x7f05005b;
         public static final int webView1=0x7f05004f;
@@ -1286,7 +1286,7 @@ containing a value of this type.
         public static final int activity_mainw=0x7f03001b;
         public static final int activity_measure=0x7f03001c;
         public static final int activity_search_bluetooth=0x7f03001d;
-        public static final int activity_temprature=0x7f03001e;
+        public static final int activity_temperature=0x7f03001e;
         public static final int bp_activity_main=0x7f03001f;
         public static final int bp_fragment_main=0x7f030020;
         public static final int building_item=0x7f030021;

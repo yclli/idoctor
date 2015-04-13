@@ -22,7 +22,7 @@ import com.sjtu.idoctor.model.AreaCacheBean;
 import com.sjtu.idoctor.model.DoctorCacheBean;
 import com.sjtu.idoctor.model.ElderCacheBean;
 import com.sjtu.idoctor.model.HttpWrapper;
-import com.sjtu.idoctor.model.TempratureCacheBean;
+import com.sjtu.idoctor.model.TemperatureCacheBean;
 import com.sjtu.idoctor.model.BloodPressureCacheBean;
 import com.sjtu.idoctor.model.HeartRateCacheBean;
 import com.sjtu.idoctor.model.User;
@@ -112,7 +112,7 @@ public class IdoctorService {
 	}
 	
 	public List<DoctorCacheBean> getDoctors(String role){
-		String digestValue = getDigest(role+"120ID"+username);
+		String digestValue = getDigest("1"+role+"20ID"+username);
 		HttpWrapper<DoctorCacheBean> model = getUserService().getDoctors(geroId, role, "1", "20", "ID", username, digestValue);
 		return model.getEntities();
 	}
@@ -130,30 +130,30 @@ public class IdoctorService {
 	 * Health Part
 	 * 
 	 */
-	public boolean insertTemprature(TempratureCacheBean temprature){
+	public boolean insertTemperature(int elderId, TemperatureCacheBean temprature){
 		String digestValue = getDigestWithUsername();
 		HttpWrapper<?> model = getHealthService()
-				.insertTemperature(geroId, temprature, username, digestValue);
+				.insertTemperature(geroId, elderId, temprature, username, digestValue);
 		if(model.isOk()){
 			return true;
 		}
 		return false;
 	}
 	
-	public boolean insertBloodPressure(BloodPressureCacheBean bloodPressure){
+	public boolean insertBloodPressure(int elderId, BloodPressureCacheBean bloodPressure){
 		String digestValue = getDigestWithUsername();
 		HttpWrapper<?> model = getHealthService()
-				.insertBloodPressure(geroId, bloodPressure, username, digestValue);
+				.insertBloodPressure(geroId, elderId, bloodPressure, username, digestValue);
 		if(model.isOk()){
 			return true;
 		}
 		return false;
 	}
 	
-	public boolean insertHeartRate(HeartRateCacheBean heartRate){
+	public boolean insertHeartRate(int elderId, HeartRateCacheBean heartRate){
 		String digestValue = getDigestWithUsername();
 		HttpWrapper<?> model = getHealthService()
-				.insertHeartRate(geroId, heartRate, username, digestValue);
+				.insertHeartRate(geroId, elderId, heartRate, username, digestValue);
 		if(model.isOk()){
 			return true;
 		}

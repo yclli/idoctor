@@ -3,7 +3,7 @@ package com.sjtu.idoctor.model;
 
 public class BloodPressureCacheBean{
 	
-	public String doctorId;
+	public int doctorId;
 	public float diastolicPressure;
 	public float systolicPressure;
 	public String time;
@@ -11,16 +11,16 @@ public class BloodPressureCacheBean{
 	public BloodPressureCacheBean(){
 	}
 	
-	public BloodPressureCacheBean(String doctorId, float diastolicPressure, float systolicPressure){
+	public BloodPressureCacheBean(int doctorId, float diastolicPressure, float systolicPressure){
 		this.setDoctorId(doctorId);
 		this.setDiastolicPressure(diastolicPressure);
 		this.setSystolicPressure(systolicPressure);
 	}
 	
-	public String getDoctorId(){
+	public int getDoctorId(){
 		return doctorId;
 	}
-	public void setDoctorId(String doctorId){
+	public void setDoctorId(int doctorId){
 		this.doctorId = doctorId;
 	}
 	

@@ -32,7 +32,7 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".view.TempratureMeasureActivity"
+            android:name=".view.TemperatureMeasureActivity"
             android:label="@string/app_name" >
         </activity>
         <activity

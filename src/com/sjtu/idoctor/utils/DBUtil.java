@@ -9,7 +9,7 @@ import java.util.List;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.sjtu.idoctor.model.TempratureCacheBean;;
+import com.sjtu.idoctor.model.TemperatureCacheBean;;
 
 public class DBUtil {
 	private ArrayList<String> arrayList=new ArrayList<String>();

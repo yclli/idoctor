@@ -1,18 +1,18 @@
 package com.sjtu.idoctor.model;
 
 
-public class HeartRateCacheBean{
+public class TemperatureCacheBean{
 	
 	public int doctorId;
-	public String heartRate;
+	public String temperature;
 	public String time;
 	
-	public HeartRateCacheBean(){
+	public TemperatureCacheBean(){
 	}
 	
-	public HeartRateCacheBean(int doctorId, String heartRate){
+	public TemperatureCacheBean(int doctorId, String temprature){
 		this.setDoctorId(doctorId);
-		this.setHeartRate(heartRate);
+		this.setTemperature(temprature);
 	}
 	
 	public int getDoctorId(){
@@ -22,11 +22,11 @@ public class HeartRateCacheBean{
 		this.doctorId = doctorId;
 	}
 	
-	public String getHeartRate(){
-		return heartRate;
+	public String getTemperature(){
+		return temperature;
 	}
-	public void setHeartRate(String heartRate){
-		this.heartRate = heartRate;
+	public void setTemperature(String temprature){
+		this.temperature = temprature;
 	}
 	
 	public String getTime(){

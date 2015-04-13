@@ -15,8 +15,9 @@ public final class Url {
 	/**
      * Base URL for all requests
      */
-    public static final String URL_BASE = "http://202.120.38.227:8088";
-    
+    //public static final String URL_BASE = "http://202.120.38.227:8088";
+	public static final String URL_BASE = "http://121.41.46.189:8080";
+	
     public static final String URL_PREFFIX="/resthouse/api/service";
 //    public static final String URL_PREFFIX =   "/resthouse/api/web";
     

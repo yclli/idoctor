@@ -8,7 +8,11 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.sjtu.idoctor.model.AreaCacheBean;
+import com.sjtu.idoctor.model.BloodPressureCacheBean;
+import com.sjtu.idoctor.model.DoctorCacheBean;
 import com.sjtu.idoctor.model.ElderCacheBean;
+import com.sjtu.idoctor.model.HeartRateCacheBean;
+import com.sjtu.idoctor.model.TemperatureCacheBean;
 import com.sjtu.idoctor.model.User;
 import com.sjtu.idoctor.service.IdoctorService;
 
@@ -24,6 +28,12 @@ public class DBUtils {
 		adminUser.setGeroId(preferences.getInt("geroId", 0));
 		adminUser.setDigest(preferences.getString("digest", ""));
 		idocService = new IdoctorService(adminUser.getDigest(), adminUser);
+	}
+	
+	public List<DoctorCacheBean> getDoctors(){
+		List<DoctorCacheBean> doctorList = new ArrayList<DoctorCacheBean>();
+		doctorList = idocService.getDoctors("医生");
+		return doctorList;
 	}
 	
 	public List<HashMap<String,String>> getAllRoom(){
@@ -73,4 +83,21 @@ public class DBUtils {
 		return elderList;
 	}
 	
+	public boolean insertTemperature(int elderId, TemperatureCacheBean temprature){
+		boolean isSuccess = false;
+		isSuccess = idocService.insertTemperature(elderId, temprature);
+		return isSuccess;
+	}
+	
+	public boolean insertBloodPressure(int elderId, BloodPressureCacheBean bloodPressure){
+		boolean isSuccess = false;
+		isSuccess = idocService.insertBloodPressure(elderId, bloodPressure);
+		return isSuccess;
+	}
+	
+	public boolean insertHeartRate(int elderId, HeartRateCacheBean heartRate){
+		boolean isSuccess = false;
+		isSuccess = idocService.insertHeartRate(elderId, heartRate);
+		return isSuccess;
+	}
 }

@@ -162,7 +162,7 @@
 			    		android:layout_height="match_parent"
 				        android:textSize="24dip"
 				        android:textColor="#99BCEF"
-			    		android:id="@+id/upperbp"/>
+			    		android:id="@+id/diastolicPressure"/>
 			    	<TextView
 			    		android:layout_width="wrap_content"
 			    		android:layout_height="match_parent"
@@ -174,7 +174,7 @@
 			    		android:layout_height="match_parent"
 				        android:textSize="24dip"
 				        android:textColor="#99BCEF"
-			    		android:id="@+id/lowerbp"/>
+			    		android:id="@+id/systolicPressure"/>
 			    	<TextView
 			    		android:layout_width="wrap_content"
 			    		android:layout_height="match_parent"
@@ -186,7 +186,7 @@
 			    		android:layout_height="match_parent"
 				        android:textSize="24dip"
 				        android:textColor="#99BCEF"
-			    		android:id="@+id/heartrate"/>
+			    		android:id="@+id/heartRate"/>
 			    </LinearLayout>
 			    
 			    <LinearLayout

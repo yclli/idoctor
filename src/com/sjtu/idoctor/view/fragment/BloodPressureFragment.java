@@ -1,14 +1,17 @@
 package com.sjtu.idoctor.view.fragment;
 
+import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
 import com.sjtu.idoctor.R;
+import com.sjtu.idoctor.model.BloodPressureCacheBean;
+import com.sjtu.idoctor.model.HeartRateCacheBean;
 import com.sjtu.idoctor.thread.BloodPressureThread;
 import com.sjtu.idoctor.utils.ClsUtils;
-import com.sjtu.idoctor.utils.DBUtil;
+import com.sjtu.idoctor.utils.DBUtils;
 import com.sjtu.idoctor.utils.Functions;
 import com.sjtu.idoctor.utils.XXTEA;
 
@@ -54,14 +57,14 @@ public class BloodPressureFragment extends FragmentActivity{
 	public static String elderName = "";
 	public static String doctorID = "8";
 	public static String itemName = "";
-	private DBUtil dbUtil = null;
+	private DBUtils dbu;
 	private boolean deviceConnected = false;
 	public final byte[] ANGEL_YES = {-95,58,0,0,0};
 	//public BloodPressureThread bpThread = null;
 	public BloodPressureThread mBPThread = null;
 	private boolean resultRead = false;
-	private int upperBP = 0;
-	private int lowerBP = 0;
+	private int diastolicPressure = 0;
+	private int systolicPressure = 0;
 	private int heartRate = 0;
 	private int processTimer = 0;
 	private boolean isMeassuring = false;
@@ -103,8 +106,8 @@ public class BloodPressureFragment extends FragmentActivity{
 				result[2] = 0xFF & arrayOfByte[4];
 				result[3] = 0xFF & arrayOfByte[5];
 				
-				BloodPressureFragment.this.upperBP = result[0]+result[1];
-				BloodPressureFragment.this.lowerBP = result[1];
+				BloodPressureFragment.this.diastolicPressure = result[0]+result[1];
+				BloodPressureFragment.this.systolicPressure = result[1];
 				BloodPressureFragment.this.heartRate = result[2];
 				
 				BloodPressureFragment.this.UpdateResult();
@@ -144,8 +147,7 @@ public class BloodPressureFragment extends FragmentActivity{
 		
 		processTimer = 0;
 		
-		SharedPreferences mySharedPreferences = getSharedPreferences("Doctor",Activity.MODE_PRIVATE);
-		dbUtil = new DBUtil(mySharedPreferences);
+		dbu = new DBUtils(preferences);
 		
 		TextView roomNameTv = (TextView) findViewById(R.id.current_room);
 		TextView elderNameTv = (TextView) findViewById(R.id.current_elder);
@@ -201,8 +203,8 @@ public class BloodPressureFragment extends FragmentActivity{
 		//public BloodPressureThread bpThread = null;
 		
 		resultRead = false;
-		upperBP = 0;
-		lowerBP = 0;
+		diastolicPressure = 0;
+		systolicPressure = 0;
 		heartRate = 0;
 	}
 
@@ -349,11 +351,11 @@ public class BloodPressureFragment extends FragmentActivity{
 	}
 	
 	public void UpdateResult(){
-		TextView upperView = (TextView) findViewById(R.id.upperbp);
-		upperView.setText(this.upperBP+"");
-		TextView lowerView = (TextView) findViewById(R.id.lowerbp);
-		lowerView.setText(this.lowerBP+"");
-		TextView heartView = (TextView) findViewById(R.id.heartrate);
+		TextView upperView = (TextView) findViewById(R.id.diastolicPressure);
+		upperView.setText(this.diastolicPressure+"");
+		TextView lowerView = (TextView) findViewById(R.id.systolicPressure);
+		lowerView.setText(this.systolicPressure+"");
+		TextView heartView = (TextView) findViewById(R.id.heartRate);
 		heartView.setText(this.heartRate+"");
 		Message msg = new Message();
 		msg.what = 13;
@@ -570,21 +572,29 @@ public class BloodPressureFragment extends FragmentActivity{
 	
 	public void submit(View v){
 		String result = "";
-		TextView upBP = (TextView)findViewById(R.id.upperbp);
-		TextView lowBP = (TextView)findViewById(R.id.lowerbp);
-		TextView hr = (TextView)findViewById(R.id.heartrate);
+		TextView dp = (TextView)findViewById(R.id.diastolicPressure);
+		TextView sp = (TextView)findViewById(R.id.systolicPressure);
+		TextView hr = (TextView)findViewById(R.id.heartRate);
 		
-		if(upBP.getText()==""&&lowBP.getText()==""&&hr.getText()==""){
+		if(dp.getText()==""&&sp.getText()==""&&hr.getText()==""){
 			Toast.makeText(BloodPressureFragment.this,"请先测量再提交",3000).show();
 			return;
 		}
 		
-		result = upBP.getText()+"-"+lowBP.getText()+"-"+hr.getText();
 		int elder_id = Integer.parseInt(this.elderID);
 		int doctor_id = Integer.parseInt(this.doctorID);
 		
-		Log.d("idoc-submit","elder_id="+elder_id+",doctor_id="+",result="+result);
-		boolean submit = dbUtil.UpdateInspection(elder_id, doctor_id, "bloodPressure", result);
+		BloodPressureCacheBean bPressure = new BloodPressureCacheBean(doctor_id,
+														Float.valueOf(dp.getText()+""),
+														Float.valueOf(sp.getText()+""));
+		HeartRateCacheBean hRate = new HeartRateCacheBean(doctor_id, hr.getText()+"");
+		SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");     
+        String date = sDateFormat.format(new java.util.Date());
+        bPressure.setTime(date);
+        hRate.setTime(date);
+		
+		boolean submit = dbu.insertBloodPressure(elder_id, bPressure) & 
+						dbu.insertHeartRate(elder_id, hRate);
 		
 		if(submit){
 			Toast.makeText(BloodPressureFragment.this, "提交数据成功", 3000).show();

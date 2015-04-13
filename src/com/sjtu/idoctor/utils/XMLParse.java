@@ -8,7 +8,7 @@ import org.xmlpull.v1.XmlPullParser;
 import android.util.Log;
 import android.util.Xml;
 
-import com.sjtu.idoctor.model.TempratureCacheBean;;
+import com.sjtu.idoctor.model.TemperatureCacheBean;;
 
 public class XMLParse{
 	public static ArrayList<String> paraseCommentInfors (InputStream inputStream){

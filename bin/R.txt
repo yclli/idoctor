@@ -298,6 +298,7 @@ int id current_item 0x7f050048
 int id current_room 0x7f050046
 int id default_activity_button 0x7f050028
 int id dialog 0x7f05000e
+int id diastolicPressure 0x7f05005d
 int id disableHome 0x7f050008
 int id doctor 0x7f05003d
 int id doctxt 0x7f05003c
@@ -313,7 +314,7 @@ int id floor_divider 0x7f050075
 int id floor_gv 0x7f050077
 int id floor_text 0x7f050076
 int id gero_title 0x7f050041
-int id heartrate 0x7f05005f
+int id heartRate 0x7f05005f
 int id home 0x7f050014
 int id homeAsUp 0x7f050005
 int id hour 0x7f050052
@@ -324,7 +325,6 @@ int id item_btn 0x7f050044
 int id item_gv 0x7f05006a
 int id listMode 0x7f050001
 int id list_item 0x7f050029
-int id lowerbp 0x7f05005e
 int id measure_btn 0x7f050065
 int id measure_confirm_btn 0x7f05004d
 int id middle 0x7f050012
@@ -366,6 +366,7 @@ int id split_action_bar 0x7f05001e
 int id start_btn 0x7f05005c
 int id submit 0x7f050060
 int id submit_area 0x7f050039
+int id systolicPressure 0x7f05005e
 int id t_cancel_button 0x7f050059
 int id t_submit_button 0x7f050058
 int id tabMode 0x7f050002
@@ -378,7 +379,6 @@ int id title 0x7f05002b
 int id top_action_bar 0x7f050020
 int id tv_loading 0x7f05006c
 int id up 0x7f050021
-int id upperbp 0x7f05005d
 int id useLogo 0x7f050003
 int id web 0x7f05005b
 int id webView1 0x7f05004f
@@ -415,7 +415,7 @@ int layout activity_main 0x7f03001a
 int layout activity_mainw 0x7f03001b
 int layout activity_measure 0x7f03001c
 int layout activity_search_bluetooth 0x7f03001d
-int layout activity_temprature 0x7f03001e
+int layout activity_temperature 0x7f03001e
 int layout bp_activity_main 0x7f03001f
 int layout bp_fragment_main 0x7f030020
 int layout building_item 0x7f030021

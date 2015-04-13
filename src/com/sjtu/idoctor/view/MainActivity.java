@@ -411,7 +411,7 @@ public class MainActivity extends ActionBarActivity {
 		Intent measureIntent = null;
 		
 		if(itemName.equals("测量体温")){
-			measureIntent = new Intent(this,TempratureMeasureActivity.class);
+			measureIntent = new Intent(this,TemperatureMeasureActivity.class);
 		}else if(itemName.equals("测量血压")){
 			measureIntent = new Intent(this,BloodPressureFragment.class);
 		}else if(itemName.equals("测量心电图")){
