@@ -41,7 +41,7 @@
     <string name="cancel">取消</string>
     <string name="back">返回</string>
     <string name="bp_tag">测量血压</string>
-    <string name="ecg_tag">测量心电图</string>
+    <string name="ecg_tag">心电图</string>
     <string name="tem_tag">测量体温</string>
     <string name="select_building">选择 楼栋</string>
     <string name="select_floor">选择 楼层</string>

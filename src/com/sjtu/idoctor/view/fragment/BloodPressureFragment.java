@@ -55,7 +55,7 @@ public class BloodPressureFragment extends FragmentActivity{
 	public static String elderID = "";
 	public static String roomNo = "";
 	public static String elderName = "";
-	public static String doctorID = "8";
+	public static int doctorID;
 	public static String itemName = "";
 	private DBUtils dbu;
 	private boolean deviceConnected = false;
@@ -143,7 +143,7 @@ public class BloodPressureFragment extends FragmentActivity{
 		elderID = preferences.getString("elderId", "");
 		roomNo = preferences.getString("roomNo", "");
 		itemName = preferences.getString("itemName", "");
-		doctorID = preferences.getString("doctorId", "8");
+		doctorID = preferences.getInt("doctorId", 11);
 		
 		processTimer = 0;
 		
@@ -582,7 +582,7 @@ public class BloodPressureFragment extends FragmentActivity{
 		}
 		
 		int elder_id = Integer.parseInt(this.elderID);
-		int doctor_id = Integer.parseInt(this.doctorID);
+		int doctor_id = this.doctorID;
 		
 		BloodPressureCacheBean bPressure = new BloodPressureCacheBean(doctor_id,
 														Float.valueOf(dp.getText()+""),

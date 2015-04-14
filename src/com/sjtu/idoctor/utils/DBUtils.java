@@ -76,7 +76,7 @@ public class DBUtils {
 			elder = elders.get(i);
 			HashMap<String,String> hashMap = new HashMap<String,String>();
 			hashMap.put("elderName", elder.getName());
-			hashMap.put("elderId", elder.getId()+"");
+			hashMap.put("elderId", elder.getElderId()+"");
 			elderList.add(hashMap);
 			
 		}

@@ -6,6 +6,7 @@ import java.io.Serializable;
 public class ElderCacheBean extends User implements Serializable{
 	
 	private static final long serialVersionUID = -737490097890850021L;
+	private int elderId;
 	private int careLevel;
 	private int areaId;
 	
@@ -27,5 +28,13 @@ public class ElderCacheBean extends User implements Serializable{
 
 	public void setAreaId(int areaId) {
 		this.areaId = areaId;
+	}
+
+	public int getElderId() {
+		return elderId;
+	}
+
+	public void setElderId(int elderId) {
+		this.elderId = elderId;
 	}
 }

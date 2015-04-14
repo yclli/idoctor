@@ -37,7 +37,7 @@ public class TemperatureMeasureActivity extends Activity{
 	public String roomNo;
 	public String itemName;
 	public String elderName;
-	public String doctorID;
+	public int doctorID;
 	private DBUtils dbu;
 	public List<TemperatureCacheBean> tempList = null;
 	// Time scrolled flag
@@ -65,7 +65,7 @@ public class TemperatureMeasureActivity extends Activity{
 		elderID = preferences.getString("elderId", "");
 		roomNo = preferences.getString("roomNo", "");
 		itemName = preferences.getString("itemName", "");
-		doctorID = preferences.getString("doctorId", "11");
+		doctorID = preferences.getInt("doctorId", 11);
 
 		TextView roomNameTv = (TextView) findViewById(R.id.current_room);
 		TextView elderNameTv = (TextView) findViewById(R.id.current_elder);
@@ -203,7 +203,7 @@ public class TemperatureMeasureActivity extends Activity{
 		        Log.e("temperature",t);
 		        
 		        int elder_id = Integer.parseInt(TemperatureMeasureActivity.this.elderID);
-		        int doctor_id = Integer.parseInt(TemperatureMeasureActivity.this.doctorID);
+		        int doctor_id = TemperatureMeasureActivity.this.doctorID;
 		        TemperatureCacheBean temperature = new TemperatureCacheBean(doctor_id, t);
 		        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");     
 		        String date = sDateFormat.format(new java.util.Date());  

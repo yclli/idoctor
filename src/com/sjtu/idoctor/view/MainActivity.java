@@ -41,12 +41,11 @@ import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 	
-	User adminUser;
-	SharedPreferences preferences;
-	SharedPreferences.Editor editor;
-	DBUtils dbu;
-	List<HashMap<String, String>> roomEntity;
-	List<RoomItemCacheBean> roomItemList = new ArrayList<RoomItemCacheBean>();
+	private SharedPreferences preferences;
+	private SharedPreferences.Editor editor;
+	private DBUtils dbu;
+	private List<HashMap<String, String>> roomEntity;
+	private List<RoomItemCacheBean> roomItemList = new ArrayList<RoomItemCacheBean>();
 	
 	private String elderName="";
 	private String building = "";
@@ -60,7 +59,6 @@ public class MainActivity extends ActionBarActivity {
 	private SimpleAdapter _floorGVAdapter = null;
 	private SimpleAdapter _roomGVAdapter = null;
 	private SimpleAdapter _elderGVAdapter = null;
-	private DBUtil dbUtil = null;
 	private GridView building_gv;
 	private GridView floor_gv;
 	private GridView room_gv;
@@ -78,14 +76,6 @@ public class MainActivity extends ActionBarActivity {
 	private Button elderBtn = null;
 	private Button itemBtn = null;
 	private int rightTimer = 1;
-
-	
-	public final static String elderIDMessage = "com.sjtu.idoctor.elderID";
-	public final static String elderNameMessage = "com.sjtu.idoctor.elderName";
-	public final static String roomNoMessage = "com.sjtu.idoctor.roomNo";
-	public final static String itemMessage = "com.sjtu.idoctor.itemName";
-	public final static String doctorMessage = "com.sjtu.idoctor.drName";
-	public final static String doctorIDMessage = "com.sjtu.idoctor.drID";
 
 	private Handler mHandler = new Handler(){
 		
@@ -119,7 +109,6 @@ public class MainActivity extends ActionBarActivity {
 				}
 				listTemp = MainActivity.this.genWantedRooms(MainActivity.this.building,MainActivity.this.floor);
 				localroomArray = listTemp.toArray(new String[listTemp.size()]);
-				//floorList = MainActivity.this.genFloors(MainActivity.this.building);
 				
 				
 				ArrayList<HashMap<String,Object>> item1List = new ArrayList<HashMap<String,Object>>();
@@ -158,10 +147,7 @@ public class MainActivity extends ActionBarActivity {
 				if(rightTimer==1){
 					return;
 				}
-				//Toast.makeText(this, _roomItems[1], 3000).show();
-				//roomSpinner.setAdapter(_roomAdapter);
 			}else if(msg.what==10){//选择房间事件
-				//String selectedRoom = roomSpinner.getSelectedItem().toString().split("-")[0];
 				ArrayList<HashMap<String,Object>> elderNameList = new ArrayList<HashMap<String,Object>>();
 				elderInfoList = dbu.getELder(areaId);
 				for(int i=0;i<elderInfoList.size();i++){
@@ -280,9 +266,6 @@ public class MainActivity extends ActionBarActivity {
 	
 	public void toggleFirstPage(){
 		room_ly = (LinearLayout) getLayoutInflater().inflate(R.layout.room_ly, null);
-		//floor_select = (LinearLayout) room_ly.findViewById(R.id.floor_select);
-		//building_spinner = (Spinner) floor_select.findViewById(R.id.buildingSpinner);
-		//floor_spinner = (Spinner) floor_select.findViewById(R.id.floorSpinner);
 		room_gv = (GridView) room_ly.findViewById(R.id.room_gv);
 		building_gv = (GridView) room_ly.findViewById(R.id.building_gv);
 		building_tx = (TextView) room_ly.findViewById(R.id.building_divider).findViewById(R.id.building_text);
@@ -327,8 +310,7 @@ public class MainActivity extends ActionBarActivity {
 	
 	public void floorButtonClick(View v){
 		Button btnV = (Button) v;
-		String floorStr = btnV.getText().toString();
-		this.floor = floorStr.substring(0, floorStr.length()-1);
+		this.floor = btnV.getText().toString();
 		Message msg = new Message();
 		msg.what = 3;
 		this.mHandler.sendEmptyMessage(msg.what);
@@ -414,15 +396,13 @@ public class MainActivity extends ActionBarActivity {
 			measureIntent = new Intent(this,TemperatureMeasureActivity.class);
 		}else if(itemName.equals("测量血压")){
 			measureIntent = new Intent(this,BloodPressureFragment.class);
-		}else if(itemName.equals("测量心电图")){
+		}else if(itemName.equals("心电图")){
 			measureIntent = new Intent(this,ConfirmActivity.class);
 			//Toast.makeText(this,"新功能正在开发中，敬请期待",3000).show();
 			//return;
 		}
 		if(measureIntent == null){
 			Log.i("idoc","in is null");
-		}else if(elderNameMessage == null){
-			Log.i("idoc","elderNameMessage is null");
 		}else if(elderName == null){
 			Log.i("idoc","elderName is null");
 		}
