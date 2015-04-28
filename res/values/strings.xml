@@ -7,6 +7,8 @@
 	<string name="login_ok">成功，请稍等</string>
 	<string name="login_err">输入错误</string>
 	<string name="message_login">正在登陆，请稍等</string>
+	<string name="action_doctor">重选医生</string>
+	<string name="action_refresh">刷新数据</string>
 	
 	
     <string name="action_settings">Settings</string>

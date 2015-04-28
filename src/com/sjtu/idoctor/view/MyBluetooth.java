@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.sjtu.idoctor.model.BluetoothCacheBean;
-import com.sjtu.idoctor.utils.DBUtil;
+//import com.sjtu.idoctor.utils.DBUtil;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -49,7 +49,7 @@ public class MyBluetooth extends Activity{
 	private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 	private receiveThread mReceiveThread = null;
 	private ConnectedThread mConnectedThread = null;
-	DBUtil dbUtil = new DBUtil();
+//	DBUtil dbUtil = new DBUtil();
 	public String data="";
 
 	
@@ -59,7 +59,7 @@ public class MyBluetooth extends Activity{
 		public void handleMessage(Message msg){
 			if(msg.what == 11){
 				//Toast.makeText(mContext, data, 5000).show();
-				String str = dbUtil.insertECG(elderID, "8", "2015/1/14", "20", "2015/1/14 13:34:29.125", data);
+//				String str = dbUtil.insertECG(elderID, "8", "2015/1/14", "20", "2015/1/14 13:34:29.125", data);
 				//Toast.makeText(MyBluetooth.this, str, 1000).show();
 			}
 			else if(msg.what == 5){
@@ -117,8 +117,8 @@ public class MyBluetooth extends Activity{
 			byte[] localCommand;
 			try{
 				if(i==0){
-					String str = dbUtil.insertECG(elderID, "126", "2015/1/14", "20", "2015/1/14 13:34:29.125", "07340738");
-					Toast.makeText(MyBluetooth.this, str, 1000).show();
+//					String str = dbUtil.insertECG(elderID, "126", "2015/1/14", "20", "2015/1/14 13:34:29.125", "07340738");
+//					Toast.makeText(MyBluetooth.this, str, 1000).show();
 				}else{
 					mReceiveThread = new receiveThread();
 					MyBluetooth.this.mReceiveThread.start();

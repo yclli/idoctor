@@ -163,7 +163,8 @@ public class BloodPressureFragment extends FragmentActivity{
         myWebView1.getSettings().setSupportZoom(true);
         myWebView1.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         myWebView1.getSettings().setBuiltInZoomControls(true);
-        myWebView1.loadUrl("file:///android_asset/blood_pressure.html?elderID="+elderID);
+        //myWebView1.loadUrl("file:///android_asset/blood_pressure.html?elderID="+elderID);
+        myWebView1.loadUrl("");
         
 /*        WebView myWebView3 = (WebView) findViewById(R.id.webView2);
         myWebView3.getSettings().setJavaScriptEnabled(true);
@@ -249,7 +250,8 @@ public class BloodPressureFragment extends FragmentActivity{
 	        myWebView1.getSettings().setSupportZoom(true);
 	        myWebView1.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 	        myWebView1.getSettings().setBuiltInZoomControls(true);
-	        myWebView1.loadUrl("file:///android_asset/blood_pressure.html");
+	        //myWebView1.loadUrl("file:///android_asset/blood_pressure.html");
+	        myWebView1.loadUrl("");
 			return rootView;
 		}
 	}
@@ -281,10 +283,10 @@ public class BloodPressureFragment extends FragmentActivity{
 					String name = localBTDevice.getName();
 					String localAddress = localBTDevice.getAddress();
 					String localDeviceName = localBTDevice.getName();
-					Log.d("idoc Xie bp",localDeviceName);
+					Log.d("idoc bp",localDeviceName);
 					int index = localDeviceName.indexOf(BPDEVICE);
-					Log.d("idoc Xie bp",index+"");
-					Log.d("idoc Xie",name);
+					Log.d("idoc bp",index+"");
+					Log.d("idoc",name);
 					nameList += name+"||";
 					Log.d("idoc-device",localAddress);
 					if(index>-1){
@@ -299,7 +301,6 @@ public class BloodPressureFragment extends FragmentActivity{
 				
 				if(localBTDevice != null){
 					this.mBTDevice = localBTDevice;
-					//Toast.makeText(TiwenActivity.this, "asdffs", 3000).show();
 					try{
 						Thread.currentThread().sleep(200);
 						Log.d("idoc-tiwen","after sleep, try to create socket");
@@ -677,9 +678,9 @@ public class BloodPressureFragment extends FragmentActivity{
 			String action =intent.getAction();
 			if(BluetoothDevice.ACTION_FOUND.equals(action)){				
 				BluetoothDevice device=intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);				
-				Log.d("idoc Xie",device.getAddress());			
-				Log.d("idoc Xie",device.getName());
-				Log.d("idoc Xie",String.valueOf(device.getBondState()));
+				Log.d("idoc",device.getAddress());			
+				Log.d("idoc",device.getName());
+				Log.d("idoc",String.valueOf(device.getBondState()));
 //				Toast.makeText(MainActivity.this, device.getName(), 5000).show();
 				if(device.getBondState() == BluetoothDevice.BOND_NONE){	
 					Toast.makeText(BloodPressureFragment.this, device.getName()+"not bonded",5000).show();

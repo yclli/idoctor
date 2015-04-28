@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import retrofit.RestAdapter;
+import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 
 import com.google.gson.Gson;
@@ -19,6 +20,7 @@ import com.sjtu.idoctor.utils.HmacSHA256Utils;
 import com.sjtu.idoctor.utils.RestAdapterRequestInterceptor;
 import com.sjtu.idoctor.business.Url;
 import com.sjtu.idoctor.model.AreaCacheBean;
+import com.sjtu.idoctor.model.DocScheduleCacheBean;
 import com.sjtu.idoctor.model.DoctorCacheBean;
 import com.sjtu.idoctor.model.ElderCacheBean;
 import com.sjtu.idoctor.model.HttpWrapper;
@@ -46,7 +48,7 @@ public class IdoctorService {
 										.setEndpoint(Url.URL_BASE)
 										.setLogLevel(RestAdapter.LogLevel.FULL)
 										.setRequestInterceptor(new RestAdapterRequestInterceptor())
-										.setConverter(new GsonConverter(provideGson()))		
+										.setConverter(new GsonConverter(provideGson()))	
 										.build();
 	}
 	
@@ -117,6 +119,12 @@ public class IdoctorService {
 		return model.getEntities();
 	}
 	
+	public List<DocScheduleCacheBean> getCurrentDoctor(String role){
+		String digestValue = getDigest("1"+role+"20ID"+username);
+		HttpWrapper<DocScheduleCacheBean> model = getScheduleService().getSchedulePlan(geroId, role, "1", "20", "ID", username, digestValue);
+		return model.getEntities();
+	}
+	
 	/*GET a User Object with digest key*/
 	public User authenticate(String username, String password) {
 		User authUser = new User(username, password);
@@ -178,6 +186,9 @@ public class IdoctorService {
 		return getRestAdapter().create(HealthService.class);
 	}
 	
+	private ScheduleService getScheduleService(){
+		return getRestAdapter().create(ScheduleService.class);
+	}
 	
 	@SuppressWarnings("unused")
 	private String getDigest(Map<String, String[]> params){

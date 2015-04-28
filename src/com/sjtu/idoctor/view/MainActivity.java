@@ -1,26 +1,34 @@
 package com.sjtu.idoctor.view;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import com.sjtu.idoctor.R;
+import com.sjtu.idoctor.model.DocScheduleCacheBean;
+import com.sjtu.idoctor.model.DoctorCacheBean;
 import com.sjtu.idoctor.model.ElderCacheBean;
 import com.sjtu.idoctor.model.RoomItemCacheBean;
 import com.sjtu.idoctor.model.User;
-import com.sjtu.idoctor.utils.DBUtil;
 import com.sjtu.idoctor.utils.DBUtils;
 import com.sjtu.idoctor.view.fragment.BloodPressureFragment;
+import com.sjtu.idoctor.view.fragment.DoctorListFragment;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -31,6 +39,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.SimpleAdapter;
@@ -46,6 +55,8 @@ public class MainActivity extends ActionBarActivity {
 	private DBUtils dbu;
 	private List<HashMap<String, String>> roomEntity;
 	private List<RoomItemCacheBean> roomItemList = new ArrayList<RoomItemCacheBean>();
+	private List<DoctorCacheBean> doctorList;
+	private Bitmap bitmap;
 	
 	private String elderName="";
 	private String building = "";
@@ -63,11 +74,12 @@ public class MainActivity extends ActionBarActivity {
 	private GridView floor_gv;
 	private GridView room_gv;
 	private GridView elder_gv;
+	private ImageView doctor_ph;
+	private TextView doctor_tx;
 	private TextView building_tx;
 	private TextView floor_tx;
 	private LinearLayout room_ly;
 	private LinearLayout right_ll;
-	private List<HashMap<String, String>> doctorList = new ArrayList<HashMap<String,String>>();
 	
 	List<HashMap<String,String>> DoctorList = null; 
 	List<HashMap<String,String>> elderInfoList = null;
@@ -81,8 +93,8 @@ public class MainActivity extends ActionBarActivity {
 		
 		@Override
 		public void handleMessage(Message msg){
-			if(msg.what==3){
-				genRoomItemList();//生成房间信息
+			if(msg.what==3){ //生成房间信息
+				genRoomItemList();
 				String[] buildingArray = null;
 				String[] floorArray = null;
 				String[] localroomArray = null;
@@ -160,6 +172,26 @@ public class MainActivity extends ActionBarActivity {
 				_elderGVAdapter = new SimpleAdapter(MainActivity.this,elderNameList,R.layout.elder_item,new String[] {"elder_name"}, new int[] {R.id.elder_btn});
 
 				MainActivity.this.elder_gv.setAdapter(_elderGVAdapter);
+			}else if(msg.what==5){//确定当前医生
+				if(doctorList.size()!=0){
+					try {
+						URL url=new URL(doctorList.get(0).getPhotoSrc());
+						InputStream is= url.openStream();
+						bitmap = BitmapFactory.decodeStream(is);
+						is.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					doctor_ph.setImageBitmap(bitmap);
+					doctor_tx.setText("当前医生："+doctorList.get(0).getName());
+					editor = preferences.edit();
+					editor.putString("doctorName", doctorList.get(0).getName());
+					editor.putInt("doctorId", doctorList.get(0).getStaffId());
+					editor.commit();
+				}
+				else{
+					docFragment();
+				}
 			}else if(msg.what ==4){
 				Toast.makeText(MainActivity.this, "网络链接失败", 50000).show();
 			}
@@ -167,7 +199,9 @@ public class MainActivity extends ActionBarActivity {
 	};
 	
 	
-	/*获取列表的线程*/
+	/**
+	 * 获取列表的线程
+	 */
 	private class GetRoomListThread extends Thread{
 		
 		@Override
@@ -191,14 +225,30 @@ public class MainActivity extends ActionBarActivity {
 		}
 	}
 	
-	private GetRoomListThread getRoomListThread =new GetRoomListThread();
+	/**
+	 *获取当班医生的线程
+	 */
+	private class GetCurrentDoctorListThread extends Thread{
+		@Override
+		public void run(){
+			Message msg = new Message();
+			//doctorList = dbu.getDoctors();
+			List<DocScheduleCacheBean> docSchedule = dbu.getCurrentDoctor();
+			List<DoctorCacheBean> doclist = dbu.getDoctors();
+			doctorList = new ArrayList<DoctorCacheBean>();
+			for(int j=0; j<docSchedule.size(); ++j){
+				DoctorCacheBean a = findDoctorByStaffId(doclist, docSchedule.get(j).getStaffId());
+				doctorList.add(a);
+			}
+			msg.what=5;
+			mHandler.sendMessage(msg);
+		}
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getSupportActionBar().hide();
 		setContentView(R.layout.activity_main);
-		Log.d("idoc","onCreate now");
 		
 		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectAll().penaltyLog().build());
 		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
@@ -208,14 +258,14 @@ public class MainActivity extends ActionBarActivity {
 		dbu = new DBUtils(preferences);
 		roomEntity = dbu.getAllRoom();
 		right_ll = (LinearLayout) findViewById(R.id.right_ll);
+		doctor_ph = (ImageView) findViewById(R.id.doctor_photo);
+		doctor_tx = (TextView) findViewById(R.id.doctor_title);
 		roomBtn = (Button) findViewById(R.id.room_btn);
 		elderBtn = (Button) findViewById(R.id.elder_btn);
 		itemBtn = (Button) findViewById(R.id.item_btn);		
 		
-		Log.i("idoc","before thread start");
-		getRoomListThread.start();
-		Log.i("idoc","on create end");
-		
+		new GetRoomListThread().start();
+		new GetCurrentDoctorListThread().start();
 	}
 
 	
@@ -253,7 +303,8 @@ public class MainActivity extends ActionBarActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_doctor) {
+			docFragment();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -502,5 +553,23 @@ public class MainActivity extends ActionBarActivity {
 			}
 		}
 		return area;
+	}
+	
+	public DoctorCacheBean findDoctorByStaffId(List<DoctorCacheBean> dl, int sid){
+		DoctorCacheBean d = null;
+		for (int i=0; i<dl.size(); i++){
+			if(dl.get(i).getStaffId() == sid)
+				d = dl.get(i);
+		}
+		return d;
+	}
+	
+	public void docFragment(){
+		DoctorListFragment df = new DoctorListFragment();
+		FragmentManager fm = this.getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+		ft.add(android.R.id.content, df);
+		ft.addToBackStack("");
+		ft.commit();
 	}
 }

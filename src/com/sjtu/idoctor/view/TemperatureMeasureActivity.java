@@ -81,8 +81,8 @@ public class TemperatureMeasureActivity extends Activity{
         myWebView1.getSettings().setSupportZoom(true);
         myWebView1.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         myWebView1.getSettings().setBuiltInZoomControls(true);
-        myWebView1.loadUrl("file:///android_asset/temperature.html?elderID="+elderID);
-		
+        //myWebView1.loadUrl("file:///android_asset/temperature.html?elderID="+elderID);
+        myWebView1.loadUrl("");
 		
 		hours = (WheelView) findViewById(R.id.hour);
 		hours.setViewAdapter(new NumericWheelAdapter(this, T_START, T_END));

@@ -44,7 +44,7 @@ public class LoginActivity extends Activity {
 		    button.setOnClickListener(new mybuttonlistener());
 		}
 		else{
-			startActivity(new Intent(this, DoctorActivity.class));
+			startActivity(new Intent(this, MainActivity.class));
 			finish();
 		}
 	}
@@ -84,7 +84,7 @@ public class LoginActivity extends Activity {
 		        editor.putString("digest", user.getDigest());
 		        editor.commit();
                 Log.d("idoctor.service","login success");
-                startActivity(new Intent(LoginActivity.this, DoctorActivity.class));
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
 		        finish();
             }
 			@Override

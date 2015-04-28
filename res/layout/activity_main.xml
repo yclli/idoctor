@@ -14,21 +14,42 @@
 		android:background="@drawable/left_bg"
 		android:orientation="vertical"
 		>
-		<TextView
-			android:layout_width="match_parent"
-			android:layout_height="180dip"
+		<LinearLayout 
+		    android:layout_width="match_parent"
+			android:layout_height="150dip"
 			android:layout_marginTop="20dip"
 			android:layout_marginLeft="40dip"
 			android:layout_marginRight="40dip"
 			android:paddingLeft="20dip"
 			android:paddingRight="20dip"
 			android:background="#CFCFCF"
-			android:textSize="40dip"
-			android:textColor="#000000"
-			android:gravity="center"
-			android:text="黄浦区老年公寓"
-			android:id="@+id/gero_title"
-			/>
+			android:orientation="vertical"
+			>
+		    
+		    <ImageView 
+		        android:layout_width="match_parent"
+		        android:layout_height="100dip"
+		        android:layout_marginTop="10dip"
+		        android:layout_marginLeft="56dip"
+				android:layout_marginRight="56dip"
+		        android:background="@drawable/photo_bg"
+		        android:id="@+id/doctor_photo"
+		        />
+		    <TextView
+				android:layout_width="match_parent"
+				android:layout_height="25dip"
+				android:layout_marginTop="5dip"
+				android:layout_marginBottom="5dip"
+				android:paddingLeft="10dip"
+				android:paddingRight="10dip"
+				android:background="#CFCFCF"
+				android:textSize="20dip"
+				android:textColor="#000000"
+				android:gravity="center"
+				android:id="@+id/doctor_title"
+				/>
+		</LinearLayout>
+		
 		<Button
 			android:layout_width="match_parent"
 			android:layout_height="180dip"

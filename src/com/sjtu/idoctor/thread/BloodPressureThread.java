@@ -85,7 +85,7 @@ public class BloodPressureThread extends Thread{
 				Message msg = new Message();
 				msg.what = 10;
 				mainHandler.sendEmptyMessage(msg.what);		
-				Log.d("bowen-read","send message after");
+				Log.d("read","send message after");
 			}
 			
 			if(readErrorNum>0){

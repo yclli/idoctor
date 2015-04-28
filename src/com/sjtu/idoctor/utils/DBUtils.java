@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.sjtu.idoctor.model.AreaCacheBean;
 import com.sjtu.idoctor.model.BloodPressureCacheBean;
+import com.sjtu.idoctor.model.DocScheduleCacheBean;
 import com.sjtu.idoctor.model.DoctorCacheBean;
 import com.sjtu.idoctor.model.ElderCacheBean;
 import com.sjtu.idoctor.model.HeartRateCacheBean;
@@ -34,6 +35,12 @@ public class DBUtils {
 		List<DoctorCacheBean> doctorList = new ArrayList<DoctorCacheBean>();
 		doctorList = idocService.getDoctors("医生");
 		return doctorList;
+	}
+	
+	public List<DocScheduleCacheBean> getCurrentDoctor(){
+		List<DocScheduleCacheBean> curDoc = new ArrayList<DocScheduleCacheBean>();
+		curDoc = idocService.getCurrentDoctor("医生");
+		return curDoc;
 	}
 	
 	public List<HashMap<String,String>> getAllRoom(){

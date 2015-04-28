@@ -16,9 +16,9 @@ public final class Url {
      * Base URL for all requests
      */
     //public static final String URL_BASE = "http://202.120.38.227:8088";
-	public static final String URL_BASE = "http://121.41.46.189:8080";
+	public static final String URL_BASE = "http://121.41.46.189";
 	
-    public static final String URL_PREFFIX="/resthouse/api/service";
+    public static final String URL_PREFFIX="/api/service";
 //    public static final String URL_PREFFIX =   "/resthouse/api/web";
     
     public static final String URL_DOWNLOAD_FRAG = "/download";
@@ -32,7 +32,7 @@ public final class Url {
     public static final String URL_AREA = URL_PREFFIX + URL_AREA_FRAG;
     
     //用于URL参数digest的密钥
-    public static final String URL_USER_KEY =    "/resthouse/pad/login";
+    public static final String URL_USER_KEY =    "/pad/login";
     
     //用户（医生）
     public static final String URL_USER_FRAG =     "/user/{uid}";
@@ -42,9 +42,9 @@ public final class Url {
     public static final String URL_STAFFS_FRAG = "/gero/{gid}/staff";
     public static final String URL_STAFFS = URL_PREFFIX + URL_STAFFS_FRAG;
     
-    // 获取某员工的上班信息列表
-    //public static final String URL_SCHEDULE_PLAN_FRAG = "/gero/{gid}/staff/{sid}/schedule";
-    //public static final String URL_SCHEDULE_PLAN = URL_PREFFIX + URL_SCHEDULE_PLAN_FRAG;
+    //获取员工的上班信息列表(养老院维度)
+    public static final String URL_SCHEDULE_PLAN_FRAG = "/gero/{gid}/schedule";
+    public static final String URL_SCHEDULE_PLAN = URL_PREFFIX + URL_SCHEDULE_PLAN_FRAG;
     
     //老人
     public static final String URL_USER_ELDERS_FRAG =     "/gero/{gid}/elder";
