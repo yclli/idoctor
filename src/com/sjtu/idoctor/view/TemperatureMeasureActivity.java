@@ -33,11 +33,14 @@ public class TemperatureMeasureActivity extends Activity{
 	SharedPreferences.Editor editor;
 	private boolean timeChanged = false;
 	private Context mContext = null;
-	public String elderID;
-	public String roomNo;
-	public String itemName;
-	public String elderName;
-	public int doctorID;
+	private int greoID;
+	private String userName;
+	private String digest;
+	private String elderID;
+	private String roomNo;
+	private String itemName;
+	private String elderName;
+	private int doctorID;
 	private DBUtils dbu;
 	public List<TemperatureCacheBean> tempList = null;
 	// Time scrolled flag
@@ -61,6 +64,9 @@ public class TemperatureMeasureActivity extends Activity{
 		setContentView(R.layout.activity_temperature);
 		
 		preferences = getSharedPreferences("Doctor", Activity.MODE_PRIVATE);
+		greoID = preferences.getInt("geroId", 0);
+		userName = preferences.getString("username", "");
+		digest = preferences.getString("digest", "");
 		elderName = preferences.getString("elderName", "");
 		elderID = preferences.getString("elderId", "");
 		roomNo = preferences.getString("roomNo", "");
@@ -81,8 +87,8 @@ public class TemperatureMeasureActivity extends Activity{
         myWebView1.getSettings().setSupportZoom(true);
         myWebView1.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         myWebView1.getSettings().setBuiltInZoomControls(true);
-        //myWebView1.loadUrl("file:///android_asset/temperature.html?elderID="+elderID);
-        myWebView1.loadUrl("");
+        myWebView1.loadUrl("file:///android_asset/temperature.html?greoID="
+        					+greoID+"&elderID="+elderID+"&userName="+userName+"&digest"+digest);
 		
 		hours = (WheelView) findViewById(R.id.hour);
 		hours.setViewAdapter(new NumericWheelAdapter(this, T_START, T_END));

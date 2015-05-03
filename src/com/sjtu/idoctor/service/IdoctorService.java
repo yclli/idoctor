@@ -148,6 +148,8 @@ public class IdoctorService {
 		return false;
 	}
 	
+	//public 
+	
 	public boolean insertBloodPressure(int elderId, BloodPressureCacheBean bloodPressure){
 		String digestValue = getDigestWithUsername();
 		HttpWrapper<?> model = getHealthService()

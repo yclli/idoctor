@@ -1,13 +1,19 @@
 package com.sjtu.idoctor.view.fragment;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
+import retrofit.RetrofitError;
+
 import com.sjtu.idoctor.R;
 import com.sjtu.idoctor.model.BloodPressureCacheBean;
+import com.sjtu.idoctor.model.DocScheduleCacheBean;
+import com.sjtu.idoctor.model.DoctorCacheBean;
 import com.sjtu.idoctor.model.HeartRateCacheBean;
 import com.sjtu.idoctor.thread.BloodPressureThread;
 import com.sjtu.idoctor.utils.ClsUtils;
@@ -67,7 +73,8 @@ public class BloodPressureFragment extends FragmentActivity{
 	private int systolicPressure = 0;
 	private int heartRate = 0;
 	private int processTimer = 0;
-	private boolean isMeassuring = false;
+	private boolean isFinish = false;
+	private boolean submit = false;
 	
 	
 	public Handler mHandler = new Handler(){
@@ -75,7 +82,6 @@ public class BloodPressureFragment extends FragmentActivity{
 		public void handleMessage(Message msg){
 			Log.d("idoc-handler","begin to handle message:message what ="+msg.what);
 			if(msg.what == 4){
-				//Toast.makeText(TiwenActivity.this, "asdgg", 3000).show();
 			}else if(msg.what == 10){//有返回数据，需要unpackage后判断是否ack
 				byte[] arrayOfByte = BloodPressureFragment.this.mBPThread.bufReciveFromBTSocket;
 				int len = BloodPressureFragment.this.mBPThread.lenReciveFromBTSocket;
@@ -83,21 +89,27 @@ public class BloodPressureFragment extends FragmentActivity{
 				BloodPressureFragment.this.Unpackage(arrayOfByte, len);
 			}else if(msg.what == 12){
 				sendIdentifyCommand();
-			}else if(msg.what == 13){
+			}else if(msg.what == 13){//测量按钮事件
 				Button startBtn = (Button) findViewById(R.id.start_btn);
 				if(BloodPressureFragment.this.processTimer == 0){
-					Toast.makeText(BloodPressureFragment.this, "验证成功，可以准备测量了！", 3000).show();
-					startBtn.setText("准备");
-					BloodPressureFragment.this.processTimer++;
-				}else if(BloodPressureFragment.this.processTimer == 1){
+					Toast.makeText(BloodPressureFragment.this, "验证成功，可以测量了！", 3000).show();
 					startBtn.setText("测量");
+					startBtn.setEnabled(true);
 					BloodPressureFragment.this.processTimer++;
-				}else if(BloodPressureFragment.this.processTimer == 2){
-					startBtn.setText("准备");
-					BloodPressureFragment.this.isMeassuring = false;
-					BloodPressureFragment.this.processTimer = 1;
+				}else if(BloodPressureFragment.this.processTimer == 1 && !isFinish){
+					measureBegin();
 				}
-			}else if(msg.what == 100){
+				else if(BloodPressureFragment.this.processTimer == 1 && isFinish){
+					startBtn.setEnabled(true);
+					isFinish = false;
+				}
+			}else if(msg.what == 15){
+				if(submit){
+					Toast.makeText(BloodPressureFragment.this, "提交数据成功", 3000).show();
+				}else{
+					Toast.makeText(BloodPressureFragment.this, "提交数据失败，请重新测量!", 3000).show();
+				}
+			}else if(msg.what == 100){//测量结束后的数据处理
 				byte[] arrayOfByte = BloodPressureFragment.this.receivedCommand;
 				Log.d("measure-result","result array is "+Functions.Bytes2HexString(arrayOfByte, arrayOfByte.length));
 				int[] result = new int[4];
@@ -109,9 +121,8 @@ public class BloodPressureFragment extends FragmentActivity{
 				BloodPressureFragment.this.diastolicPressure = result[0]+result[1];
 				BloodPressureFragment.this.systolicPressure = result[1];
 				BloodPressureFragment.this.heartRate = result[2];
-				
+			
 				BloodPressureFragment.this.UpdateResult();
-				//Toast.makeText(BloodPressure.this, "测得的结果为："+(result[0]+result[1])+"-----"+result[1]+"-----"+result[2], 8000).show();
 			}else if(msg.what == 1000){
 				Log.d("idoc-bp","socket error");
 				mBTDevice = null;
@@ -166,18 +177,6 @@ public class BloodPressureFragment extends FragmentActivity{
         //myWebView1.loadUrl("file:///android_asset/blood_pressure.html?elderID="+elderID);
         myWebView1.loadUrl("");
         
-/*        WebView myWebView3 = (WebView) findViewById(R.id.webView2);
-        myWebView3.getSettings().setJavaScriptEnabled(true);
-        myWebView3.getSettings().setLoadWithOverviewMode(true);
-        myWebView3.getSettings().setSupportZoom(true);
-        myWebView3.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-        myWebView3.getSettings().setBuiltInZoomControls(true);
-        myWebView3.loadUrl("file:///android_asset/heart_rate.html?elderID="+elderID);*/
-/*
-		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}*/
 	}
 	
 	@Override
@@ -213,7 +212,7 @@ public class BloodPressureFragment extends FragmentActivity{
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		//getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
@@ -223,9 +222,7 @@ public class BloodPressureFragment extends FragmentActivity{
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -258,18 +255,16 @@ public class BloodPressureFragment extends FragmentActivity{
 	
 	public void bpMeasureClick(View v){
 		if(processTimer == 0){
-			startIdentify(v);
+			startIdentify();
+			findViewById(R.id.start_btn).setEnabled(false);
 		}else if(processTimer == 1){
-			sendAngleReady(v);
-		}else if(processTimer == 2 && !isMeassuring){
-			isMeassuring = true;
-			measureBegin(v);
-		}else if(processTimer == 2 && isMeassuring){
-			Toast.makeText(BloodPressureFragment.this, "正在测量中，请勿重复点击测量按钮", 3000).show();
+			sendAngleReady();
+			findViewById(R.id.start_btn).setEnabled(false);
+			//.setClickable(false);
 		}
 	}
 	
-	public void startIdentify(View v){
+	public void startIdentify(){
 		if(!mBTAdapter.isEnabled()){
 			Toast.makeText(BloodPressureFragment.this, "请重新打开蓝牙然后重新点击测量!", 5000).show();
 		}else{
@@ -358,6 +353,7 @@ public class BloodPressureFragment extends FragmentActivity{
 		lowerView.setText(this.systolicPressure+"");
 		TextView heartView = (TextView) findViewById(R.id.heartRate);
 		heartView.setText(this.heartRate+"");
+		isFinish = true;
 		Message msg = new Message();
 		msg.what = 13;
 		this.mHandler.sendEmptyMessage(msg.what);
@@ -509,7 +505,7 @@ public class BloodPressureFragment extends FragmentActivity{
 		
 	}
 
-	public void sendAngleReady(View v){
+	public void sendAngleReady(){
 		byte[] arrayOfByte1 = {-95,49,0,0,75,2,9,1,11,79};
 		byte[] arrayOfByte2 = new byte[15];
 		arrayOfByte2 = this.PackageCommand(arrayOfByte1);
@@ -532,7 +528,7 @@ public class BloodPressureFragment extends FragmentActivity{
 		
 	}
 	
-	public void measureBegin(View v){
+	public void measureBegin(){
 		byte[] arrayOfByte = PackageCommand(this.ANGEL_YES);
 		if(this.mBPThread!=null){
 			try{
@@ -572,7 +568,6 @@ public class BloodPressureFragment extends FragmentActivity{
 	}
 	
 	public void submit(View v){
-		String result = "";
 		TextView dp = (TextView)findViewById(R.id.diastolicPressure);
 		TextView sp = (TextView)findViewById(R.id.systolicPressure);
 		TextView hr = (TextView)findViewById(R.id.heartRate);
@@ -582,26 +577,7 @@ public class BloodPressureFragment extends FragmentActivity{
 			return;
 		}
 		
-		int elder_id = Integer.parseInt(this.elderID);
-		int doctor_id = this.doctorID;
-		
-		BloodPressureCacheBean bPressure = new BloodPressureCacheBean(doctor_id,
-														Float.valueOf(dp.getText()+""),
-														Float.valueOf(sp.getText()+""));
-		HeartRateCacheBean hRate = new HeartRateCacheBean(doctor_id, hr.getText()+"");
-		SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");     
-        String date = sDateFormat.format(new java.util.Date());
-        bPressure.setTime(date);
-        hRate.setTime(date);
-		
-		boolean submit = dbu.insertBloodPressure(elder_id, bPressure) & 
-						dbu.insertHeartRate(elder_id, hRate);
-		
-		if(submit){
-			Toast.makeText(BloodPressureFragment.this, "提交数据成功", 3000).show();
-		}else{
-			Toast.makeText(BloodPressureFragment.this, "提交数据失败，请重新测量!", 3000).show();
-		}
+		new PostDataThread().start();
 	}
 	
 	public void cancel(View v){
@@ -706,6 +682,45 @@ public class BloodPressureFragment extends FragmentActivity{
 				
 				Log.d("idoc-bt-connection","remote device disconnected");
 			}
+		}
+	}
+	
+	private class PostDataThread extends Thread{
+		@Override
+		public void run(){
+			Message msg = new Message();
+			
+			TextView dp = (TextView)findViewById(R.id.diastolicPressure);
+			TextView sp = (TextView)findViewById(R.id.systolicPressure);
+			TextView hr = (TextView)findViewById(R.id.heartRate);
+			int elder_id = Integer.parseInt(BloodPressureFragment.elderID);
+			int doctor_id = BloodPressureFragment.doctorID;
+			boolean isIsp = false;
+			boolean isIhr = false;
+			
+			BloodPressureCacheBean bPressure = new BloodPressureCacheBean(doctor_id,
+															Float.valueOf(dp.getText()+""),
+															Float.valueOf(sp.getText()+""));
+			HeartRateCacheBean hRate = new HeartRateCacheBean(doctor_id, hr.getText()+"");
+			SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");     
+	        String date = sDateFormat.format(new java.util.Date());
+	        bPressure.setTime(date);
+	        hRate.setTime(date);
+			
+	        try{
+	        	isIsp = dbu.insertBloodPressure(elder_id, bPressure);
+	        }catch(RetrofitError e){
+	        	
+	        }
+	        try{
+	        	isIhr = dbu.insertHeartRate(elder_id, hRate);
+	        }catch(RetrofitError e){
+	        	
+	        }
+			submit = isIsp & isIhr;
+			
+			msg.what=15;
+			mHandler.sendMessage(msg);
 		}
 	}
 }
