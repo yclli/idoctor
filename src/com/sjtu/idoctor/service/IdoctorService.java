@@ -20,13 +20,16 @@ import com.sjtu.idoctor.utils.HmacSHA256Utils;
 import com.sjtu.idoctor.utils.RestAdapterRequestInterceptor;
 import com.sjtu.idoctor.business.Url;
 import com.sjtu.idoctor.model.AreaCacheBean;
+import com.sjtu.idoctor.model.BloodPressureRecordCacheBean;
 import com.sjtu.idoctor.model.DocScheduleCacheBean;
 import com.sjtu.idoctor.model.DoctorCacheBean;
 import com.sjtu.idoctor.model.ElderCacheBean;
+import com.sjtu.idoctor.model.HeartRateRecordCacheBean;
 import com.sjtu.idoctor.model.HttpWrapper;
 import com.sjtu.idoctor.model.TemperatureCacheBean;
 import com.sjtu.idoctor.model.BloodPressureCacheBean;
 import com.sjtu.idoctor.model.HeartRateCacheBean;
+import com.sjtu.idoctor.model.TemperatureRecordCacheBean;
 import com.sjtu.idoctor.model.User;
 
 /**
@@ -138,6 +141,27 @@ public class IdoctorService {
 	 * Health Part
 	 * 
 	 */
+	public TemperatureRecordCacheBean getTemperature(int elderId, String startDate, String endDate){
+		String digestValue = getDigest(endDate+startDate+username);
+		HttpWrapper<TemperatureRecordCacheBean> model = getHealthService()
+				.getTemperature(geroId, elderId, startDate, endDate, username, digestValue);
+		return model.getEntity();
+	}
+	
+	public BloodPressureRecordCacheBean gettBloodPressure(int elderId, String startDate, String endDate){
+		String digestValue = getDigest(endDate+startDate+username);
+		HttpWrapper<BloodPressureRecordCacheBean> model = getHealthService()
+				.gettBloodPressure(geroId, elderId, startDate, endDate, username, digestValue);
+		return model.getEntity();
+	}
+	
+	public HeartRateRecordCacheBean getHeartRate(int elderId, String startDate, String endDate){
+		String digestValue = getDigest(endDate+startDate+username);
+		HttpWrapper<HeartRateRecordCacheBean> model = getHealthService()
+				.getHeartRate(geroId, elderId, startDate, endDate, username, digestValue);
+		return model.getEntity();
+	}
+	
 	public boolean insertTemperature(int elderId, TemperatureCacheBean temprature){
 		String digestValue = getDigestWithUsername();
 		HttpWrapper<?> model = getHealthService()
@@ -146,9 +170,7 @@ public class IdoctorService {
 			return true;
 		}
 		return false;
-	}
-	
-	//public 
+	} 
 	
 	public boolean insertBloodPressure(int elderId, BloodPressureCacheBean bloodPressure){
 		String digestValue = getDigestWithUsername();

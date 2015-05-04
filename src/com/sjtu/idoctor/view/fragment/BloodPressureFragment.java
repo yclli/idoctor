@@ -2,6 +2,8 @@ package com.sjtu.idoctor.view.fragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -75,13 +77,22 @@ public class BloodPressureFragment extends FragmentActivity{
 	private int processTimer = 0;
 	private boolean isFinish = false;
 	private boolean submit = false;
+	private List<HashMap<String,String>> bpRecord = null;
+	private WebView myWebView1;
 	
 	
 	public Handler mHandler = new Handler(){
 		@Override
 		public void handleMessage(Message msg){
 			Log.d("idoc-handler","begin to handle message:message what ="+msg.what);
-			if(msg.what == 4){
+			if(msg.what == 1){
+				String send = "";
+				send = send + bpRecord.get(0).get("times") + "," + bpRecord.get(0).get("diastolicPressure")+","+bpRecord.get(0).get("systolicPressure");
+				for (int j=1; j<bpRecord.size(); j++){
+					send = send + ";" + bpRecord.get(j).get("times") + "," + bpRecord.get(j).get("diastolicPressure")+","+bpRecord.get(j).get("systolicPressure");
+				}
+				myWebView1.loadUrl("javascript:getResult(\'"+send+"\')");
+			}else if(msg.what == 4){
 			}else if(msg.what == 10){//有返回数据，需要unpackage后判断是否ack
 				byte[] arrayOfByte = BloodPressureFragment.this.mBPThread.bufReciveFromBTSocket;
 				int len = BloodPressureFragment.this.mBPThread.lenReciveFromBTSocket;
@@ -168,14 +179,15 @@ public class BloodPressureFragment extends FragmentActivity{
 		elderNameTv.setText(elderName);
 		itemNameTv.setText(itemName);
 		
-		WebView myWebView1 = (WebView) findViewById(R.id.webView1);
+		myWebView1 = (WebView) findViewById(R.id.webView1);
         myWebView1.getSettings().setJavaScriptEnabled(true);
         myWebView1.getSettings().setLoadWithOverviewMode(true);
         myWebView1.getSettings().setSupportZoom(true);
         myWebView1.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         myWebView1.getSettings().setBuiltInZoomControls(true);
-        //myWebView1.loadUrl("file:///android_asset/blood_pressure.html?elderID="+elderID);
-        myWebView1.loadUrl("");
+        myWebView1.loadUrl("file:///android_asset/blood_pressure.html");
+        
+        new GetbpRecordThread().start();
         
 	}
 	
@@ -241,14 +253,14 @@ public class BloodPressureFragment extends FragmentActivity{
 			View rootView = inflater.inflate(R.layout.bp_fragment_main, container,
 					false);	
 			Log.d("idoc-bp","Create blood preassure thread!");
-			WebView myWebView1 = (WebView) rootView.findViewById(R.id.webView1);
-	        myWebView1.getSettings().setJavaScriptEnabled(true);
-	        myWebView1.getSettings().setLoadWithOverviewMode(true);
-	        myWebView1.getSettings().setSupportZoom(true);
-	        myWebView1.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-	        myWebView1.getSettings().setBuiltInZoomControls(true);
+			//myWebView1 = (WebView) getActivity().findViewById(R.id.webView1);
+	        //myWebView1.getSettings().setJavaScriptEnabled(true);
+	        //myWebView1.getSettings().setLoadWithOverviewMode(true);
+	        //myWebView1.getSettings().setSupportZoom(true);
+	       // myWebView1.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+	       // myWebView1.getSettings().setBuiltInZoomControls(true);
 	        //myWebView1.loadUrl("file:///android_asset/blood_pressure.html");
-	        myWebView1.loadUrl("");
+	      
 			return rootView;
 		}
 	}
@@ -721,6 +733,24 @@ public class BloodPressureFragment extends FragmentActivity{
 			
 			msg.what=15;
 			mHandler.sendMessage(msg);
+		}
+	}
+	
+	private class GetbpRecordThread extends Thread{
+		@Override
+		public void run(){
+			Message msg = new Message();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");    
+			Calendar calendar = Calendar.getInstance();
+			String endDate = sdf.format(calendar.getTime());
+			calendar.roll(Calendar.DAY_OF_YEAR, -5);
+			String startDate = sdf.format(calendar.getTime());
+			
+			bpRecord = dbu.gettBloodPressure(Integer.parseInt(elderID), startDate, endDate);
+			if(bpRecord != null){
+				msg.what=1;
+				mHandler.sendMessage(msg);
+			}
 		}
 	}
 }

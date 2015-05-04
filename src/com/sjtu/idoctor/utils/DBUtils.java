@@ -9,11 +9,14 @@ import android.util.Log;
 
 import com.sjtu.idoctor.model.AreaCacheBean;
 import com.sjtu.idoctor.model.BloodPressureCacheBean;
+import com.sjtu.idoctor.model.BloodPressureRecordCacheBean;
 import com.sjtu.idoctor.model.DocScheduleCacheBean;
 import com.sjtu.idoctor.model.DoctorCacheBean;
 import com.sjtu.idoctor.model.ElderCacheBean;
 import com.sjtu.idoctor.model.HeartRateCacheBean;
+import com.sjtu.idoctor.model.HeartRateRecordCacheBean;
 import com.sjtu.idoctor.model.TemperatureCacheBean;
+import com.sjtu.idoctor.model.TemperatureRecordCacheBean;
 import com.sjtu.idoctor.model.User;
 import com.sjtu.idoctor.service.IdoctorService;
 
@@ -88,6 +91,52 @@ public class DBUtils {
 			
 		}
 		return elderList;
+	}
+	
+	public List<HashMap<String,String>> getTemperature(int elderId, String startDate, String endDate){
+		List<HashMap<String, String>> temperaturePoint = new ArrayList<HashMap<String, String>>();
+		TemperatureRecordCacheBean tpRecord = idocService.getTemperature(elderId, startDate, endDate);
+		if(tpRecord.getTpList().size()!=0){
+			for(int i=0; i<tpRecord.getTpList().size(); i++){
+				HashMap<String,String> hashMap = new HashMap<String,String>();
+				hashMap.put("temperature", tpRecord.getTpList().get(i).getTemperature());
+				hashMap.put("times", tpRecord.getTpList().get(i).getTimes());
+				temperaturePoint.add(hashMap);
+			}
+			return temperaturePoint;
+		}
+		return null;
+	}
+	
+	public List<HashMap<String,String>> gettBloodPressure(int elderId, String startDate, String endDate){
+		List<HashMap<String, String>> bpPoint = new ArrayList<HashMap<String, String>>();
+		BloodPressureRecordCacheBean bpRecord = idocService.gettBloodPressure(elderId, startDate, endDate);
+		if(bpRecord.getBpList().size()!=0){
+			for(int i=0; i<bpRecord.getBpList().size(); i++){
+				HashMap<String,String> hashMap = new HashMap<String,String>();
+				hashMap.put("diastolicPressure", bpRecord.getBpList().get(i).getDiastolicPressure()+"");
+				hashMap.put("systolicPressure", bpRecord.getBpList().get(i).getSystolicPressure()+"");
+				hashMap.put("times", bpRecord.getBpList().get(i).getTimes());
+				bpPoint.add(hashMap);
+			}
+			return bpPoint;
+		}
+		return null;
+	}
+	
+	public List<HashMap<String,String>> getHeartRate(int elderId, String startDate, String endDate){
+		List<HashMap<String, String>> hrPoint = new ArrayList<HashMap<String, String>>();
+		HeartRateRecordCacheBean hrRecord = idocService.getHeartRate(elderId, startDate, endDate);
+		if(hrRecord.getHrList().size()!=0){
+			for(int i=0; i<hrRecord.getHrList().size(); i++){
+				HashMap<String,String> hashMap = new HashMap<String,String>();
+				hashMap.put("temperature", hrRecord.getHrList().get(i).getHeartRate()+"");
+				hashMap.put("times", hrRecord.getHrList().get(i).getTimes());
+				hrPoint.add(hashMap);
+			}
+			return hrPoint;
+		}
+		return null;
 	}
 	
 	public boolean insertTemperature(int elderId, TemperatureCacheBean temprature){

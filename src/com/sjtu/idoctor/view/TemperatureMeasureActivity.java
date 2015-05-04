@@ -1,6 +1,9 @@
 package com.sjtu.idoctor.view;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import kankan.wheel.widget.OnWheelChangedListener;
 import kankan.wheel.widget.OnWheelClickedListener;
@@ -11,10 +14,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -23,6 +29,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.sjtu.idoctor.R;
+import com.sjtu.idoctor.model.DocScheduleCacheBean;
 import com.sjtu.idoctor.model.DoctorCacheBean;
 import com.sjtu.idoctor.model.TemperatureCacheBean;
 import com.sjtu.idoctor.utils.DBUtils;
@@ -42,7 +49,8 @@ public class TemperatureMeasureActivity extends Activity{
 	private String elderName;
 	private int doctorID;
 	private DBUtils dbu;
-	public List<TemperatureCacheBean> tempList = null;
+	private List<TemperatureCacheBean> tempList = null;
+	private List<HashMap<String,String>> tpRecord = null;
 	// Time scrolled flag
 	private boolean timeScrolled = false;
 	private TextView temperature;
@@ -50,13 +58,24 @@ public class TemperatureMeasureActivity extends Activity{
 	private int T_END = 44;
 	private Button cancel_button;
 	private Button submit_button;
+	private WebView myWebView1;
 	private  WheelView hours;
 	private  WheelView mins;
 	private boolean recentDataReady = false;
-	
-/*	public void temperatureMeasureActivity(){
-		
-	}*/
+
+	private Handler mHandler = new Handler(){
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what==1){
+				String send = "";
+				send = send + tpRecord.get(0).get("times") + "," + tpRecord.get(0).get("temperature");
+				for (int j=1; j<tpRecord.size(); j++){
+					send = send + ";" + tpRecord.get(j).get("times") + "," + tpRecord.get(j).get("temperature");
+				}
+				myWebView1.loadUrl("javascript:getResult(\'"+send+"\')");
+			}
+		}
+	};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -81,14 +100,15 @@ public class TemperatureMeasureActivity extends Activity{
 		elderNameTv.setText(elderName);
 		itemNameTv.setText(itemName);
 		
-		WebView myWebView1 = (WebView) findViewById(R.id.webView1);
+		myWebView1 = (WebView) findViewById(R.id.webView1);
         myWebView1.getSettings().setJavaScriptEnabled(true);
         myWebView1.getSettings().setLoadWithOverviewMode(true);
         myWebView1.getSettings().setSupportZoom(true);
         myWebView1.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         myWebView1.getSettings().setBuiltInZoomControls(true);
-        myWebView1.loadUrl("file:///android_asset/temperature.html?greoID="
-        					+greoID+"&elderID="+elderID+"&userName="+userName+"&digest"+digest);
+        myWebView1.setWebChromeClient(new WebChromeClient() {});
+        myWebView1.loadUrl("file:///android_asset/temperature.html");
+        
 		
 		hours = (WheelView) findViewById(R.id.hour);
 		hours.setViewAdapter(new NumericWheelAdapter(this, T_START, T_END));
@@ -97,8 +117,6 @@ public class TemperatureMeasureActivity extends Activity{
 		mins.setViewAdapter(new NumericWheelAdapter(this, 0, 9, "%01d"));
 		mins.setCyclic(true);
 
-//		final TimePicker picker = (TimePicker) findViewById(R.id.time);
-//		picker.setIs24HourView(true);
 		temperature = (TextView) findViewById(R.id.temperature_show_number);
 		cancel_button = (Button) findViewById(R.id.t_cancel_button);
 		submit_button = (Button) findViewById(R.id.t_submit_button);
@@ -159,8 +177,7 @@ public class TemperatureMeasureActivity extends Activity{
 		mins.addScrollingListener(scrollListener);
 		
 		dbu = new DBUtils(preferences);
-		
-		//List<DoctorCacheBean> d = dbu.getDoctors();
+		new GetTemperatureRecordThread().start();
 	}
 	
 	@Override
@@ -225,5 +242,23 @@ public class TemperatureMeasureActivity extends Activity{
 		        }
 		    }  
 		});  
+	}
+	
+	private class GetTemperatureRecordThread extends Thread{
+		@Override
+		public void run(){
+			Message msg = new Message();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");    
+			Calendar calendar = Calendar.getInstance();
+			String endDate = sdf.format(calendar.getTime());
+			calendar.roll(Calendar.DAY_OF_YEAR, -5);
+			String startDate = sdf.format(calendar.getTime());
+			
+			tpRecord = dbu.getTemperature(Integer.parseInt(elderID), startDate, endDate);
+			if(tpRecord != null){
+				msg.what=1;
+				mHandler.sendMessage(msg);
+			}
+		}
 	}
 }
