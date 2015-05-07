@@ -2,66 +2,27 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-	<script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
-	<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
-	<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"></script>
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<script type="text/javascript" src="highcharts.js"></script>
+	<script type="text/javascript" src="exporting.js"></script>
 	<script>
-		
+		var result = '';
 
-		$(function () {
-			var result;
-			var query = getQueryParams(location.search);
-			var elder_id = query.elderID;
-			var postContent = {
-				elder_id:elder_id,
-				device_type:"bloodPressure",
-				query_type:"",
-				day_amount:"5"
-			};
-		    $.ajax({
-		        type: 'GET',
-		        url: 'http://121.41.46.189/icare/Service1.asmx/getLastDaysRecord?callback=?',
-		        async: false,
-		        beforeSend: function(x) {
-                  x.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-                },
-		        dataType: "jsonp",
-		        contentType: "application/json; charset=utf-8",
-		        data:postContent,
-		       	success: function(data){
-		       		result=data;
-		       		display();
-		        },
-		        error: function (xhr, ajaxOptions, thrownError) {
-			        alert(xhr.statusText);
-			        alert(xhr.responseText);
-			        alert(xhr.status);
-			        alert(thrownError);
-			    }
-		    });
-			// $.get("http://202.120.38.227/laobanHealthcare/Service1.asmx/getLastDaysRecord",
-			//  { elder_id:"9" , device_type:"temperature", query_type:"", day_amount:"5" },
-			//  function(data){
-			//  	alert("Data Loaded: " + data);
-			//  });
-						
-			function getQueryParams(qs) {
-				qs = qs.split("+").join(" ");
+		Highcharts.setOptions({
+	    	lang:{
+		       
+		       months:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
+		       
+		       shortMonths: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],
+
+		    }
+		});
+		
+		function getResult(resultString){
+
+			result = resultString;
 			
-				var params = {}, tokens,
-					re = /[?&]?([^=]+)=([^&]*)/g;
-			
-				while (tokens = re.exec(qs)) {
-					params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
-				}
-			
-				return params;
-			}
-			
-			function display (){
-				// console.log(result);
-				timeStringToUtC(result.data[0].inspection_time);
-				genData();
+			$(function () {
 				$('#container').highcharts({
 				    chart: {
 				        type: 'spline'
@@ -71,6 +32,9 @@
 				    },
 				    xAxis: {
 				        type: 'datetime',
+				        dateTimeLabelFormats: {
+	                		day: '%b%e日'
+	            		}
 				    },
 				    yAxis: {
 				        title: {
@@ -97,27 +61,27 @@
 				        data: genData()
 				    }]
 				});
-			}
-			function timeStringToUtC(timeString){
-				year=timeString.split('/')[0];
-				month=parseInt(timeString.split('/')[1])-1;
-				date=timeString.split('/')[2].split(" ")[0];
-				hour=timeString.split('/')[2].split(" ")[1].split(':')[0];
-				min=timeString.split('/')[2].split(" ")[1].split(':')[1];
-				sec=timeString.split('/')[2].split(" ")[1].split(':')[2];
-				// console.log(Date.UTC(year,month,date,hour,min,sec));
-				// console.log(result.data[0].elder_temperature)
-				return Date.UTC(year,month,date,hour,min,sec);
-			}
-			function genData(){
-				var dataArr=new Array();
-				for (var i = result.data.length - 1; i >= 0; i--) {
-					dataArr[i]=[timeStringToUtC(result.data[i].inspection_time),Number(result.data[i].elder_heart_rate)];
-				};
-				// console.log(dataArr);
-				return dataArr;
-			}
-		});
+				function timeStringToUtC(timeString){
+					year=timeString.split(' ')[0].split('-')[0];
+					month=parseInt(timeString.split(' ')[0].split('-')[1])-1;
+					date=timeString.split(' ')[0].split('-')[2];
+					hour=timeString.split(' ')[1].split(':')[0];
+					min=timeString.split(' ')[1].split(':')[1];
+					sec=timeString.split(' ')[1].split(':')[2];
+					// console.log(Date.UTC(year,month,date,hour,min,sec));
+					return Date.UTC(year,month,date,hour,min,sec);
+				}
+				function genData(){
+					var dataArr=new Array();
+					var rlist = result.split(';');
+					for (var i = rlist.length - 1; i >= 0; i--) {
+						dataArr[i]=[timeStringToUtC(rlist[i].split(',')[0]),Number(rlist[i].split(',')[1])];
+					};
+					// console.log(dataArr);
+					return dataArr;
+				}
+			});
+		}
 	</script>
 </head>
 <body>

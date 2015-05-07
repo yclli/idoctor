@@ -118,7 +118,7 @@ public class BloodPressureFragment extends FragmentActivity{
 				if(submit){
 					Toast.makeText(BloodPressureFragment.this, "提交数据成功", 3000).show();
 				}else{
-					Toast.makeText(BloodPressureFragment.this, "提交数据失败，请重新测量!", 3000).show();
+					Toast.makeText(BloodPressureFragment.this, "提交数据失败，请重新提交!", 3000).show();
 				}
 			}else if(msg.what == 100){//测量结束后的数据处理
 				byte[] arrayOfByte = BloodPressureFragment.this.receivedCommand;
@@ -742,6 +742,7 @@ public class BloodPressureFragment extends FragmentActivity{
 			Message msg = new Message();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");    
 			Calendar calendar = Calendar.getInstance();
+			calendar.roll(Calendar.DAY_OF_YEAR, +1);
 			String endDate = sdf.format(calendar.getTime());
 			calendar.roll(Calendar.DAY_OF_YEAR, -5);
 			String startDate = sdf.format(calendar.getTime());

@@ -11,13 +11,21 @@
       
     <item android:bottom="8dp" android:right="8dp" android:top="8dp" android:left="8dp" >  
         <selector xmlns:android="http://schemas.android.com/apk/res/android">  
-            <item android:state_pressed="true">  
+            <!-- <item android:state_pressed="true">  
                 <shape android:shape="oval" >  
                     <corners android:radius="@dimen/size90"/>  
                     <solid android:color="#d66b2f" />  
                     <size android:width="162dp" android:height="162dp"/>  
                 </shape>  
-            </item>  
+            </item>   -->
+            
+            <item android:state_pressed="true">  
+                <shape android:shape="oval" >  
+                    <corners android:radius="@dimen/size90"/>  
+                    <solid android:color="#8A8A8A" />  
+                    <size android:width="162dp" android:height="162dp"/>  
+                </shape>  
+            </item>
             
             <item android:state_enabled="false">  
                 <shape android:shape="oval" >  

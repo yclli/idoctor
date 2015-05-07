@@ -250,6 +250,7 @@ public class TemperatureMeasureActivity extends Activity{
 			Message msg = new Message();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");    
 			Calendar calendar = Calendar.getInstance();
+			calendar.roll(Calendar.DAY_OF_YEAR, +1);
 			String endDate = sdf.format(calendar.getTime());
 			calendar.roll(Calendar.DAY_OF_YEAR, -5);
 			String startDate = sdf.format(calendar.getTime());
