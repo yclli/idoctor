@@ -3,9 +3,9 @@ package com.sjtu.idoctor.model;
 
 public class TemperatureCacheBean{
 	
-	public int doctorId;
-	public String temperature;
-	public String time;
+	private int doctorId;
+	private String temperature;
+	private String time;
 	
 	public TemperatureCacheBean(){
 	}

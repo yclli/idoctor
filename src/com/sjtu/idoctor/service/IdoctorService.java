@@ -33,7 +33,7 @@ import com.sjtu.idoctor.model.TemperatureRecordCacheBean;
 import com.sjtu.idoctor.model.User;
 
 /**
- * @author kang shiyong
+ * @author lzl
  * @Date 2015/3/25
  */
 public class IdoctorService {
@@ -43,7 +43,7 @@ public class IdoctorService {
 	private String username;
 	
 	/**
-     * Create icarer service
+     * Create idoctor service
      * Default CTOR
      */
 	public IdoctorService() {
@@ -68,7 +68,7 @@ public class IdoctorService {
 	}
 	
 	/**
-     * Create icarer service
+     * Create idoctor service
      *
      * @param restAdapter The RestAdapter that allows HTTP Communication.
      */

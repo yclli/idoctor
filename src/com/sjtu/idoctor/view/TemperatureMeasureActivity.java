@@ -47,6 +47,7 @@ public class TemperatureMeasureActivity extends Activity{
 	private String roomNo;
 	private String itemName;
 	private String elderName;
+	private String t = null;
 	private int doctorID;
 	private DBUtils dbu;
 	private List<TemperatureCacheBean> tempList = null;
@@ -73,6 +74,10 @@ public class TemperatureMeasureActivity extends Activity{
 					send = send + ";" + tpRecord.get(j).get("times") + "," + tpRecord.get(j).get("temperature");
 				}
 				myWebView1.loadUrl("javascript:getResult(\'"+send+"\')");
+			}else if(msg.what==2){
+				Toast.makeText(TemperatureMeasureActivity.this, "提交成功", 3000).show();
+			}else if(msg.what==3){
+				Toast.makeText(TemperatureMeasureActivity.this,"网络传输出错，请再次提交",3000).show();
 			}
 		}
 	};
@@ -222,24 +227,10 @@ public class TemperatureMeasureActivity extends Activity{
 		        Log.i("TEST", "Should post to server");  
 		        int integer_part=hours.getCurrentItem()+T_START;
 		        int float_part=mins.getCurrentItem();
-		        String t = integer_part+"."+float_part;
+		        t = integer_part+"."+float_part;
 		        Log.e("temperature",t);
 		        
-		        int elder_id = Integer.parseInt(TemperatureMeasureActivity.this.elderID);
-		        int doctor_id = TemperatureMeasureActivity.this.doctorID;
-		        TemperatureCacheBean temperature = new TemperatureCacheBean(doctor_id, t);
-		        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");     
-		        String date = sDateFormat.format(new java.util.Date());  
-		        temperature.setTime(date);
-		        
-		        boolean submit = dbu.insertTemperature(elder_id, temperature);
-		        Log.d("idoc-submit",submit?"true":"false");
-		        if(submit){
-		        	Toast.makeText(TemperatureMeasureActivity.this, "提交成功", 3000).show();
-		        }
-		        else{
-		        	Toast.makeText(TemperatureMeasureActivity.this,"网络传输出错，请再次提交",3000).show();
-		        }
+		        new PostTemperatureRecordThread().start();
 		    }  
 		});  
 	}
@@ -258,6 +249,28 @@ public class TemperatureMeasureActivity extends Activity{
 			tpRecord = dbu.getTemperature(Integer.parseInt(elderID), startDate, endDate);
 			if(tpRecord != null){
 				msg.what=1;
+				mHandler.sendMessage(msg);
+			}
+		}
+	}
+	
+	private class PostTemperatureRecordThread extends Thread{
+		@Override
+		public void run(){
+			Message msg = new Message();
+			int elder_id = Integer.parseInt(TemperatureMeasureActivity.this.elderID);
+	        int doctor_id = TemperatureMeasureActivity.this.doctorID;
+	        TemperatureCacheBean temperature = new TemperatureCacheBean(doctor_id, t);
+	        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");     
+	        String date = sDateFormat.format(new java.util.Date());  
+	        temperature.setTime(date);
+	        
+	        boolean submit = dbu.insertTemperature(elder_id, temperature);
+			if(submit == true){
+				msg.what=2;
+				mHandler.sendMessage(msg);
+			}else{
+				msg.what=3;
 				mHandler.sendMessage(msg);
 			}
 		}

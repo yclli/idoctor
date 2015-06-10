@@ -6,9 +6,9 @@ import java.util.List;
 
 public class BloodPressureRecordCacheBean{
 	
-	public int id;
-	public String name;
-	public List<item> bpList;
+	private int id;
+	private String name;
+	private List<item> bpList;
 	
 	public BloodPressureRecordCacheBean(){
 	}

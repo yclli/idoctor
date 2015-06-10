@@ -56,6 +56,7 @@ public class MainActivity extends ActionBarActivity {
 	private List<HashMap<String, String>> roomEntity;
 	private List<RoomItemCacheBean> roomItemList = new ArrayList<RoomItemCacheBean>();
 	private List<DoctorCacheBean> doctorList;
+	private ArrayList<HashMap<String,Object>> elderNameList;
 	private Bitmap bitmap;
 	
 	private String elderName="";
@@ -63,7 +64,6 @@ public class MainActivity extends ActionBarActivity {
 	private String floor = "";
 	private String roomNo="";
 	private String areaId="";
-	
 	
 	
 	private SimpleAdapter _buildingGVAdapter = null;
@@ -160,28 +160,14 @@ public class MainActivity extends ActionBarActivity {
 					return;
 				}
 			}else if(msg.what==10){//选择房间事件
-				ArrayList<HashMap<String,Object>> elderNameList = new ArrayList<HashMap<String,Object>>();
-				elderInfoList = dbu.getELder(areaId);
-				for(int i=0;i<elderInfoList.size();i++){
-					HashMap<String, Object> map = new HashMap<String, Object>();  
-					map.put("elder_name", elderInfoList.get(i).get("elderName"));
-					map.put("elder_id", elderInfoList.get(i).get("elderId"));
-					elderNameList.add(map);
-				}
+				new GetElderThread().start();
 				
+			}else if(msg.what==11){//获取当前房间老人
 				_elderGVAdapter = new SimpleAdapter(MainActivity.this,elderNameList,R.layout.elder_item,new String[] {"elder_name"}, new int[] {R.id.elder_btn});
-
 				MainActivity.this.elder_gv.setAdapter(_elderGVAdapter);
+				
 			}else if(msg.what==5){//确定当前医生
 				if(doctorList.size()!=0){
-					try {
-						URL url=new URL(doctorList.get(0).getPhotoSrc());
-						InputStream is= url.openStream();
-						bitmap = BitmapFactory.decodeStream(is);
-						is.close();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
 					doctor_ph.setImageBitmap(bitmap);
 					doctor_tx.setText("当前医生："+doctorList.get(0).getName());
 					editor = preferences.edit();
@@ -208,6 +194,7 @@ public class MainActivity extends ActionBarActivity {
 		public void run(){
 			Log.d("idoc", "thread running 1111");
 			Message msg = new Message();
+			roomEntity = dbu.getAllRoom();
 			if(roomEntity!=null){
 				while(roomEntity.size()<2){}
 				if(roomEntity.size()>1){
@@ -232,7 +219,7 @@ public class MainActivity extends ActionBarActivity {
 		@Override
 		public void run(){
 			Message msg = new Message();
-			//doctorList = dbu.getDoctors();
+			
 			List<DocScheduleCacheBean> docSchedule = dbu.getCurrentDoctor();
 			List<DoctorCacheBean> doclist = dbu.getDoctors();
 			doctorList = new ArrayList<DoctorCacheBean>();
@@ -240,7 +227,39 @@ public class MainActivity extends ActionBarActivity {
 				DoctorCacheBean a = findDoctorByStaffId(doclist, docSchedule.get(j).getStaffId());
 				doctorList.add(a);
 			}
+			if(doctorList.size()!=0){
+				try {
+					URL url=new URL(doctorList.get(0).getPhotoSrc());
+					InputStream is= url.openStream();
+					bitmap = BitmapFactory.decodeStream(is);
+					is.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 			msg.what=5;
+			mHandler.sendMessage(msg);
+		}
+	}
+	
+	/**
+	 *获取房间老人的线程
+	 */
+	private class GetElderThread extends Thread{
+		@Override
+		public void run(){
+			Message msg = new Message();
+			
+			elderNameList = new ArrayList<HashMap<String,Object>>();
+			elderInfoList = dbu.getELder(areaId);
+			for(int i=0;i<elderInfoList.size();i++){
+				HashMap<String, Object> map = new HashMap<String, Object>();  
+				map.put("elder_name", elderInfoList.get(i).get("elderName"));
+				map.put("elder_id", elderInfoList.get(i).get("elderId"));
+				elderNameList.add(map);
+			}
+			
+			msg.what=11;
 			mHandler.sendMessage(msg);
 		}
 	}
@@ -249,14 +268,11 @@ public class MainActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectAll().penaltyLog().build());
-		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
-		
+				
 		preferences = getSharedPreferences("Doctor", Activity.MODE_PRIVATE);
 		
 		dbu = new DBUtils(preferences);
-		roomEntity = dbu.getAllRoom();
+		
 		right_ll = (LinearLayout) findViewById(R.id.right_ll);
 		doctor_ph = (ImageView) findViewById(R.id.doctor_photo);
 		doctor_tx = (TextView) findViewById(R.id.doctor_title);
@@ -325,9 +341,11 @@ public class MainActivity extends ActionBarActivity {
 		right_ll.removeAllViews();
 		right_ll.addView(room_ly, LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT); 
 		
-		Message msg = new Message();
-		msg.what = 3;
-		mHandler.sendEmptyMessage(msg.what);
+		if(roomEntity!=null){
+			Message msg = new Message();
+			msg.what = 3;
+			mHandler.sendEmptyMessage(msg.what);
+		}
 	}
 	
 	public void toggleSecondPage(){

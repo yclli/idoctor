@@ -709,6 +709,7 @@ public class BloodPressureFragment extends FragmentActivity{
 			int doctor_id = BloodPressureFragment.doctorID;
 			boolean isIsp = false;
 			boolean isIhr = false;
+			int count = 0;
 			
 			BloodPressureCacheBean bPressure = new BloodPressureCacheBean(doctor_id,
 															Float.valueOf(dp.getText()+""),
@@ -718,17 +719,21 @@ public class BloodPressureFragment extends FragmentActivity{
 	        String date = sDateFormat.format(new java.util.Date());
 	        bPressure.setTime(date);
 	        hRate.setTime(date);
-			
-	        try{
-	        	isIsp = dbu.insertBloodPressure(elder_id, bPressure);
-	        }catch(RetrofitError e){
-	        	
-	        }
-	        try{
-	        	isIhr = dbu.insertHeartRate(elder_id, hRate);
-	        }catch(RetrofitError e){
-	        	
-	        }
+			while(isIsp!=true && count<5){
+				count++;
+				try{
+					isIsp = dbu.insertBloodPressure(elder_id, bPressure);
+				}catch(RetrofitError e){	
+				}
+			}
+			count = 0;
+			while(isIhr!=true && count<5){
+				count++;
+		        try{
+		        	isIhr = dbu.insertHeartRate(elder_id, hRate);
+		        }catch(RetrofitError e){
+		        }
+			}
 			submit = isIsp & isIhr;
 			
 			msg.what=15;

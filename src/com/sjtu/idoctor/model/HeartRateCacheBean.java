@@ -3,9 +3,9 @@ package com.sjtu.idoctor.model;
 
 public class HeartRateCacheBean{
 	
-	public int doctorId;
-	public String heartRate;
-	public String time;
+	private int doctorId;
+	private String heartRate;
+	private String time;
 	
 	public HeartRateCacheBean(){
 	}

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.sjtu.idoctor.R;
+import com.sjtu.idoctor.R.id;
 import com.sjtu.idoctor.model.DoctorCacheBean;
 import com.sjtu.idoctor.utils.DBUtils;
 
@@ -36,6 +37,8 @@ public class DoctorListFragment extends Fragment {
 	private ArrayAdapter<String> adapter;
 	private Button chooseBtn;
 	private Button cancelBtn;
+	private ImageView ph;
+	private TextView t;
 	private Bitmap bitmap;
 	private SharedPreferences preferences;
 	private SharedPreferences.Editor editor;
@@ -84,18 +87,9 @@ public class DoctorListFragment extends Fragment {
 					editor.putString("doctorName", docName);
 					editor.putInt("doctorId", doc.getStaffId());
 					editor.commit();
-					try {
-						URL url=new URL(doc.getPhotoSrc());
-						InputStream is= url.openStream();
-						bitmap = BitmapFactory.decodeStream(is);
-						is.close();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					ImageView ph = (ImageView) getActivity().findViewById(R.id.doctor_photo);
-					ph.setImageBitmap(bitmap);
-					TextView t = (TextView) getActivity().findViewById(R.id.doctor_title);
-					t.setText("当前医生："+docName);
+					ph = (ImageView) getActivity().findViewById(R.id.doctor_photo);
+					t = (TextView) getActivity().findViewById(R.id.doctor_title);
+					new GetPhotoThread().start();
 				}
 				
 				getActivity().onBackPressed();
@@ -121,6 +115,23 @@ public class DoctorListFragment extends Fragment {
 		}
 	}
 	
+	private class GetPhotoThread extends Thread{
+		@Override
+		public void run(){
+			Message msg = new Message();
+			try {
+				URL url=new URL(doc.getPhotoSrc());
+				InputStream is= url.openStream();
+				bitmap = BitmapFactory.decodeStream(is);
+				is.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			msg.what=2;
+			handler.sendMessage(msg);
+		}
+	}
+	
 	private Handler handler = new Handler(){
 		@Override
 		public void handleMessage(Message msg){
@@ -135,6 +146,10 @@ public class DoctorListFragment extends Fragment {
 				lv.setSelection(0);
 				lv.setItemChecked(0, true);
 				docName  = doclist.get(0);
+			}
+			else if(msg.what==2){
+				ph.setImageBitmap(bitmap);
+				t.setText("当前医生："+docName);
 			}
 		}
 	};

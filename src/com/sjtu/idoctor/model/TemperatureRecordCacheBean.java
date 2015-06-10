@@ -6,9 +6,9 @@ import java.util.List;
 
 public class TemperatureRecordCacheBean{
 	
-	public int id;
-	public String name;
-	public List<item> tpList;
+	private int id;
+	private String name;
+	private List<item> tpList;
 	
 	public TemperatureRecordCacheBean(){
 	}

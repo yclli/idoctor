@@ -3,10 +3,10 @@ package com.sjtu.idoctor.model;
 
 public class BloodPressureCacheBean{
 	
-	public int doctorId;
-	public float diastolicPressure;
-	public float systolicPressure;
-	public String time;
+	private int doctorId;
+	private float diastolicPressure;
+	private float systolicPressure;
+	private String time;
 	
 	public BloodPressureCacheBean(){
 	}
