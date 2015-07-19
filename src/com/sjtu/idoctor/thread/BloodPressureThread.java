@@ -18,7 +18,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class BloodPressureThread extends Thread{
-	public static final String bp7Address = "8C:DE:52:08:D7:1A";
+	//public static final String bp7Address = "8C:DE:52:08:D7:1A";
 	public InputStream mInputStream = null;
 	public OutputStream mOutputStream = null;
 	public BluetoothSocket mBTsocket = null;

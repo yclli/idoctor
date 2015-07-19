@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="public" additionalparam=" -encoding UTF-8 -charset UTF-8" author="true" classpath="../appcompat_v7/bin/appcompat_v7.jar;libs/javax.inject-1.jar;libs/retrofit-1.9.0.jar;../wheel/bin/wheel.jar;libs/dagger-1.2.2.jar;../appcompat_v7/libs/android-support-v4.jar;libs/commons-codec-1.10.jar;libs/gson-2.3.1.jar;../appcompat_v7/libs/android-support-v7-appcompat.jar;D:\Sys\Support\Android\SDK\android-sdk-windows\platforms\android-19\android.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="com.sjtu.idoctor.utils,com.sjtu.idoctor.thread,com.sjtu.idoctor.service,com.sjtu.idoctor.view,com.sjtu.idoctor.view.dialog,com.sjtu.idoctor.utils.task,com.sjtu.idoctor.view.fragment,com.sjtu.idoctor.utils.core,com.sjtu.idoctor.model,com.sjtu.idoctor.model.utils,com.sjtu.idoctor.business" source="1.7" sourcepath="src;gen" splitindex="true" use="true" version="true"/>
+    </target>
+</project>

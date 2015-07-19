@@ -2,11 +2,10 @@ package com.sjtu.idoctor.model;
 
 import java.util.List;
 
+
 public class HttpWrapper<T> {
 	private int status;
 	private String error;
-//	private int total;
-//	private String nextPageString;
 	private List<T> entities;
 	
 	public int getStatus() {

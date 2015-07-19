@@ -547,9 +547,6 @@ public class MainActivity extends ActionBarActivity {
 			if(this.roomItemList.get(i).getBuilding().equals(building)){
 				Log.i("idoc","relevante");
 				String localRoomItem = "";
-				/*localRoomItem.floor = this.roomItemList.get(i).floor;
-				localRoomItem.roomNo = this.roomItemList.get(i).roomNo;
-				localRoomItem.building = this.roomItemList.get(i).building;*/
 				localRoomItem = this.roomItemList.get(i).getBuilding();
 				list.add(localRoomItem);
 			}

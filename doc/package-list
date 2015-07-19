@@ -1,0 +1,11 @@
+com.sjtu.idoctor.business
+com.sjtu.idoctor.model
+com.sjtu.idoctor.model.utils
+com.sjtu.idoctor.service
+com.sjtu.idoctor.thread
+com.sjtu.idoctor.utils
+com.sjtu.idoctor.utils.core
+com.sjtu.idoctor.utils.task
+com.sjtu.idoctor.view
+com.sjtu.idoctor.view.dialog
+com.sjtu.idoctor.view.fragment

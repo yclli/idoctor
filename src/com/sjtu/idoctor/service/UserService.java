@@ -13,7 +13,7 @@ import com.sjtu.idoctor.model.DoctorCacheBean;
 import com.sjtu.idoctor.model.HttpWrapper;
 
 public interface UserService {
-	/*admin获取自己用户信息*/
+	/*admin获取当前用户*/
 	@GET(Url.URL_USER)
 	User getUser(@Path("uid")int userId);
 	

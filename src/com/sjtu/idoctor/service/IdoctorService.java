@@ -33,7 +33,8 @@ import com.sjtu.idoctor.model.TemperatureRecordCacheBean;
 import com.sjtu.idoctor.model.User;
 
 /**
- * @author lzl
+ * 
+ * @author Zhuolun Li
  * @Date 2015/3/25
  */
 public class IdoctorService {

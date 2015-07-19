@@ -51,13 +51,13 @@ public class BloodPressureFragment extends FragmentActivity{
 	
 	SharedPreferences preferences;
 	SharedPreferences.Editor editor;
-	public static final String bp7Address = "8C:DE:52:08:D7:1A";
+	//public static final String bp7Address = "8C:DE:52:08:D7:1A";
 	private BluetoothDevice mBTDevice = null;
 	private BluetoothAdapter mBTAdapter = null;
 	private BluetoothSocket mBTSocket = null;
 	private BluetoothReceiver mBTReceiver =null;
 	private final static String BPDEVICE = "BP7";
-	public byte[] socketReadResult = new byte[256];
+	//public byte[] socketReadResult = new byte[256];
 	public int commandNum = 1; //对应源程序中的commandSequenceNum
 	public byte[] receivedCommand = null;
 	public static String elderID = "";
@@ -145,7 +145,7 @@ public class BloodPressureFragment extends FragmentActivity{
 					Log.d("idoc-stop","close socket error");
 				}
 				mBTSocket = null;
-				socketReadResult = null;
+				//socketReadResult = null;
 				commandNum = 1; //对应源程序中的commandSequenceNum
 				receivedCommand = null;
 				deviceConnected = false;
@@ -208,7 +208,7 @@ public class BloodPressureFragment extends FragmentActivity{
 			Log.d("idoc-stop","close socket error");
 		}
 		mBTSocket = null;
-		socketReadResult = null;
+		//socketReadResult = null;
 		commandNum = 1; //对应源程序中的commandSequenceNum
 		receivedCommand = null;
 		deviceConnected = false;
@@ -241,29 +241,22 @@ public class BloodPressureFragment extends FragmentActivity{
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment {
-		public BloodPressureThread fragmentBPThread = null; 
+	//public static class PlaceholderFragment extends Fragment {
+	//	public BloodPressureThread fragmentBPThread = null; 
 
-		public PlaceholderFragment() {
-		}
+	//	public PlaceholderFragment() {
+	//	}
 
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.bp_fragment_main, container,
-					false);	
-			Log.d("idoc-bp","Create blood preassure thread!");
-			//myWebView1 = (WebView) getActivity().findViewById(R.id.webView1);
-	        //myWebView1.getSettings().setJavaScriptEnabled(true);
-	        //myWebView1.getSettings().setLoadWithOverviewMode(true);
-	        //myWebView1.getSettings().setSupportZoom(true);
-	       // myWebView1.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-	       // myWebView1.getSettings().setBuiltInZoomControls(true);
-	        //myWebView1.loadUrl("file:///android_asset/blood_pressure.html");
+	//	@Override
+	//	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	//			Bundle savedInstanceState) {
+	//		View rootView = inflater.inflate(R.layout.bp_fragment_main, container,
+	//				false);	
+	//		Log.d("idoc-bp","Create blood preassure thread!");
 	      
-			return rootView;
-		}
-	}
+	//		return rootView;
+	//	}
+	//}
 	
 	public void bpMeasureClick(View v){
 		if(processTimer == 0){
@@ -393,22 +386,26 @@ public class BloodPressureFragment extends FragmentActivity{
 		    byte[] arrayOfByte7;
 			byte[] arrayOfByte5 = { 126, -82, -121, 56, -126, 98, 40, 35, 12, -44, -70, -32, -105, -74, -59, 3 };//对应CommBlueTooth中Identification方法里面的arrayOfBytes5
 			
+			/**
+			 * arrayOfByte1为每位正的16位随机比特列
+			 */
 			new Random(System.currentTimeMillis()).nextBytes(arrayOfByte1);
-			
-			
 			for(int i = 0;i<16;i++){
 				if(arrayOfByte1[i]<0){
 					arrayOfByte1[i] = (byte)(0 - arrayOfByte1[i]);
 				}
 			}
 
+			/**
+			 * arrayOfByte6为arrayOfByte1的反转列
+			 */
 			arrayOfByte6 = reverseByteArray(arrayOfByte1);
+			/**
+			 * arrayOfByte7为arrayOfByte6在首加两位（-95，-6）
+			 */
 			arrayOfByte7 = new byte[18];
 			arrayOfByte7[0] = -95;
-			arrayOfByte7[1] = -6;
-			
-			Log.d("Identification","commandNum====="+commandNum);
-					
+			arrayOfByte7[1] = -6;		
 			for(int j=0;j<16;j++){
 				arrayOfByte7[(j + 2)] = arrayOfByte6[j];
 			}
@@ -551,7 +548,12 @@ public class BloodPressureFragment extends FragmentActivity{
 			}
 		}	
 	}
-		
+	
+	/**
+	 * 将16位比特列每四位反转
+	 * @param paramArrayOfByte
+	 * @return byte[]
+	 */
 	public byte[] reverseByteArray(byte[] paramArrayOfByte)
 	{
 	  byte[] arrayOfByte = new byte[16];
@@ -600,6 +602,11 @@ public class BloodPressureFragment extends FragmentActivity{
 		finish();
 	}
 	
+	/**
+	 * 把比特列打包为传输命令列
+	 * @param arrayOfByte
+	 * @return 加5位比特列
+	 */
 	public byte[] PackageCommand(byte[] arrayOfByte){
 		byte[] result = new byte[5+arrayOfByte.length];
 		result[0] = -80;
